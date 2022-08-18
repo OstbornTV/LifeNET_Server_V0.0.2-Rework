@@ -1,0 +1,5 @@
+#include "utils\functions.cpp"
+#include "advGather\functions.cpp"
+#include "bugTracker\functions.cpp"
+#include "mapFilter\functions.cpp"
+#include "safeZones\functions.cpp"

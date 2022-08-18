@@ -1,0 +1,11 @@
+kontrollieren ob Icons richtig sind
+Kontrolle des exdb3`s und  server sowie hc
+Alle Configs in Config überarbeiten und bearbeiten
+in der Mission alles exportieren zur SQF (außer Player und schilder/ alles was objekte betrifft)
+
+- Polizei Station überarbeiten
+-ADAC Luftrettung bearbeiten
+-Krankenhaus Rosche erbauen
+-neue Farmrouten und überarbeiten somit sie aufgebaut sind wie LYL 
+
+Script kontrolle machen

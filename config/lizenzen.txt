@@ -1,0 +1,31 @@
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "flug" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "flug" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"flug",0,false,false,"",' !license_civ_flug && playerSide isEqualTo civilian ',5];
+ 
+this addAction[localize"STR_Process_brezzel",life_fnc_processAction,"brezzel",0,false,false,"",' life_inv_brezzel > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "brezzel" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "brezzel" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"brezzel",0,false,false,"",' !license_civ_brezzel && playerSide isEqualTo civilian ',5];
+ 
+this addAction[localize"STR_Process_farbstoff",life_fnc_processAction,"farbstoff",0,false,false,"",' life_inv_farbstoff > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "farbstoff" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "farbstooff" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"farbstoff",0,false,false,"",' !license_civ_farbstoff && playerSide isEqualTo civilian ',5];
+ 
+this addAction[localize"STR_Process_plastik_pellets",life_fnc_processAction,"plastik_pellets",0,false,false,"",' life_inv_plastik_pellets > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "plastik_pellets" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "plastik_pellets" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"plastik_pellets",0,false,false,"",' !license_civ_plastik_pellets && playerSide isEqualTo civilian ',5];
+ 
+this addAction[localize"STR_Process_mehl",life_fnc_processAction,"mehl",0,false,false,"",' life_inv_mehl > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "muehler" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "muehler" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"muehler",0,false,false,"",' !license_civ_muehler && playerSide isEqualTo civilian ',5];
+
+this addAction[localize"STR_Process_pommes",life_fnc_processAction,"pommes",0,false,false,"",' life_inv_pommes > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "pommes" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "pommes" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"pommes",0,false,false,"",' !license_civ_pommes && playerSide isEqualTo civilian ',5];
+ 
+this addAction[localize"STR_Process_lsd",life_fnc_processAction,"lsd",0,false,false,"",' life_inv_lsd > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "lsd" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "lsd" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"lsd",0,false,false,"",' !license_civ_lsd && playerSide isEqualTo civilian ',5];
+
+this addAction[localize"STR_Process_Oil",life_fnc_processAction,"oil",0,false,false,"",' life_inv_oilUnprocessed > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "oil" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "oil" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"oil",0,false,false,"",' !license_civ_oil && playerSide isEqualTo civilian ',5];
+
+this addAction[localize"STR_Process_salz_brezzel",life_fnc_processAction,"salz_brezzel",0,false,false,"",' life_inv_salz_brezzel > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "salz_brezzel" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "salz_brezzel" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"salz_brezzel",0,false,false,"",' !license_civ_salz_brezzel && playerSide isEqualTo civilian ',5];
+
+this addAction[localize"STR_Process_holzsammel",life_fnc_processAction,"holzsammel",0,false,false,"",' life_inv_holzsammel > 0 && !life_is_processing && !life_action_inUse',5]; 
+this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "holzsammel" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "holzsammel" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"holzsammel",0,false,false,"",' !license_civ_holzsammel && playerSide isEqualTo civilian ',5];
+
+call {this addAction[localize"STR_Process_holzsammel",life_fnc_processAction,"holzsammel",0,false,false,"",' life_inv_holzsammel > 0 && !life_is_processing && !life_action_inUse',5]};  
+call {this addAction[format ["%1 ($%2)",localize (getText(missionConfigFile >> "Licenses" >> "holzsammel" >> "displayName")), [(getNumber(missionConfigFile >> "Licenses" >> "holzsammel" >> "price"))] call life_fnc_numberText],life_fnc_buyLicense,"holzsammel",0,false,false,"",' !license_civ_holzsammel && playerSide isEqualTo civilian ',5]};
