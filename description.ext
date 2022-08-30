@@ -34,13 +34,6 @@ onLoadMission 	= "Weiterentwickelt vom LifeNET Team";
 author = "LifeNET RPG - Team";
 loadScreen = "\LifeNET_Skins\istdasnocharma.jpg";
 
-//skipLobby = 1;
-//respawn = 3;
-//respawnDelay = 0.1;
-//respawnVehicleDelay = 5;
-//respawnDialog = 0;
-//respawnOnStart = -1;
-//respawnButton = 0;
 enableTeamSwitch = 0;
 
 minPlayerDistance = 50;
@@ -56,11 +49,9 @@ wreckRemovalMaxTime = 2700;
 forceRotorLibSimulation = 0;
 enableDebugConsole[] = {"76561198158428030"}; //enableDebugConsole = 1;
 
-joinUnassigned = 1;
 disabledAI = 1;
 briefing = 1;
 debriefing = 1;
-scriptedPlayer = 1;
 
 showSquadRadar = 0;
 saving = 0;
