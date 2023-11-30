@@ -6,13 +6,18 @@
     Packs up a deployed spike strip.
 */
 
-//private _spikes = nearestObjects[getPos player, ["Land_Razorwire_F"], 8] select 0;
-(nearestObjects [player,["Land_Razorwire_F"],8]) params [["_spikes", objNull]];
+// Finde die nächsten Reifenstecher in der Nähe des Spielers
+private _spikes = nearestObjects [player, ["Land_Razorwire_F"], 8] select 0;
 if (isNull _spikes) exitWith {};
 
-if ([true,"spikeStrip",1] call life_fnc_handleInv) then {
-    private _index = life_spikesDeployed findIf {_x isEqualTo _spikes};
-    life_spikesDeployed deleteAt _index; //remove spikes from spike array
-    titleText [localize "STR_NOTF_SpikeStrip","PLAIN"];
+// Überprüfe, ob der Spieler das Einpacken des Reifenstechers schafft
+if ([true, "spikeStrip", 1] call life_fnc_handleInv) then {
+    // Finde den Index des Reifenstechers im life_spikesDeployed Array
+    private _index = life_spikesDeployed findIf { _x isEqualTo _spikes };
+    // Entferne den Reifenstecher aus dem Array
+    life_spikesDeployed deleteAt _index;
+    // Zeige eine Benachrichtigung an
+    titleText [localize "STR_NOTF_SpikeStrip", "PLAIN"];
+    // Lösche den Reifenstecher
     deleteVehicle _spikes;
 };

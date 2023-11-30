@@ -10,32 +10,45 @@
 params [
     ["_target",objNull,[objNull]]
 ];
+
+// Beende, wenn das Zielobjekt nicht vorhanden ist
 if (isNull _target) exitWith {};
 
 private "_dp";
+
+// Überprüfe, ob das Zielobjekt in den Konfigurationen der Lieferpunkte vorhanden ist
 if (str(_target) in LIFE_SETTINGS(getArray,"delivery_points")) then {
     private _point = LIFE_SETTINGS(getArray,"delivery_points");
+
+    // Entferne das aktuelle Zielobjekt aus den möglichen Lieferpunkten
     _point deleteAt (_point find (str(_target)));
     _dp = selectRandom _point;
 } else {
+    // Wähle zufällig einen Lieferpunkt aus den allgemeinen Konfigurationen
     _dp = selectRandom (LIFE_SETTINGS(getArray,"delivery_points"));
 };
 
+// Setze die Startposition für die Lieferung
 life_dp_start = _target;
 life_delivery_in_progress = true;
 
+// Konvertiere den Lieferpunkt zu einem lesbaren Format
 life_dp_point = call compile format ["%1",_dp];
 _dp = toUpper((_dp splitString "_") joinString " ");
 
+// Erstelle eine einfache Aufgabe für den Spieler
 life_cur_task = player createSimpleTask [format ["Delivery_%1",life_dp_point]];
 life_cur_task setSimpleTaskDescription [format [localize "STR_NOTF_DPStart",_dp],"Delivery Job",""];
 life_cur_task setTaskState "Assigned";
 player setCurrentTask life_cur_task;
 
+// Zeige eine Benachrichtigung über die zugewiesene Lieferungsaufgabe
 ["DeliveryAssigned",[format [localize "STR_NOTF_DPTask",_dp]]] call bis_fnc_showNotification;
 
+// Überwache, ob die Lieferung erfolgreich abgeschlossen oder fehlgeschlagen ist
 [] spawn {
     waitUntil {!life_delivery_in_progress || {!alive player}};
+
     if (!alive player) then {
         life_cur_task setTaskState "Failed";
         player removeSimpleTask life_cur_task;

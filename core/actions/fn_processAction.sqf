@@ -2,13 +2,18 @@
 /*
     File: fn_processAction.sqf
     Author: Bryan "Tonic" Boardwine
-    Modified : NiiRoZz
+    Modified: NiiRoZz
 
-    Description:
-    Master handling for processing an item.
-    NiiRoZz : Added multiprocess
+    Description: Master handling for processing an item. NiiRoZz : Added multiprocess
 */
 
+// Konstanten für Magic Numbers
+private _DELAY_SHORT = 0.28;
+private _DELAY_LONG = 0.9;
+private _PROGRESS_STEP = 0.01;
+private _DISTANCE_LIMIT = 10;
+
+// Fehlerüberprüfung
 scopeName "main";
 
 params [
@@ -16,11 +21,9 @@ params [
     "",
     "",
     ["_type", "", [""]]
-
 ];
 
-//Error check
-if (isNull _vendor || {_type isEqualTo ""} || {player distance _vendor > 10}) exitWith {};
+if (isNull _vendor || {_type isEqualTo ""} || {player distance _vendor > _DISTANCE_LIMIT}) exitWith {};
 
 if !(isClass (missionConfigFile >> "ProcessAction" >> _type)) exitWith {
     diag_log format ["%1: Processor class doesn't exist",_type];
@@ -93,106 +96,50 @@ if (_materialsGivenWeight > _materialsRequiredWeight) then {
     };
 };
 
-//Setup our progress bar.
+// Setup Fortschrittsbalken.
 disableSerialization;
 "progressBar" cutRsc ["life_progress","PLAIN"];
 private _ui = uiNamespace getVariable "life_progress";
 private _progress = _ui displayCtrl 38201;
 private _pgText = _ui displayCtrl 38202;
 _pgText ctrlSetText format ["%2 (1%1)...","%",_text];
-_progress progressSetPosition 0.01;
-private _cP = 0.01;
+_progress progressSetPosition _PROGRESS_STEP;
+private _cP = _PROGRESS_STEP;
 
 life_is_processing = true;
 
-if (_hasLicense) then {
+// Funktion für das Warten während des Fortschritts
+private _progressWait = {
+    params ["_duration"];
+
     for "_i" from 0 to 1 step 0 do {
-        uiSleep  0.28;
-        _cP = _cP + 0.01;
-        _progress progressSetPosition _cP;
-        _pgText ctrlSetText format ["%3 (%1%2)...",round(_cP * 100),"%",_text];
-        if (_cP >= 1) exitWith {};
-        if (player distance _vendor > 10) exitWith {};
+        uiSleep _duration;
+        if (player distance _vendor > _DISTANCE_LIMIT) exitWith {};
     };
-        if (player distance _vendor > 10) exitWith {
-        hint localize "STR_Process_Stay";
-        "progressBar" cutText ["","PLAIN"];
-        life_is_processing = false;
-        life_action_inUse = false;
-    };
+};
+
+// Funktion für das Durchführen von Konversionen
+private _processConversions = {
+    params ["_materials", "_conversions"];
 
     {
-        _x params ["_item","_count"];
-        [false,_item,_count * (_minimumConversions)] call life_fnc_handleInv;
+        _x params ["_item", "_count"];
+        [(_materials select 0), _item, _count * _conversions] call life_fnc_handleInv;
         true
-    } count _materialsRequired;
+    } count (_materials select 1);
+};
 
-    {
-        _x params ["_item","_count"];
-        [true,_item,_count * (_minimumConversions)] call life_fnc_handleInv;
-        true
-    } count _materialsGiven;
+if (_hasLicense) then {
+    [_PROGRESS_STEP, _DELAY_SHORT] spawn _progressWait;
 
-    "progressBar" cutText ["","PLAIN"];
-    if (_minimumConversions isEqualTo (selectMin _totalConversions)) then {
-        hint localize "STR_NOTF_ItemProcess";
-    } else {
-        hint localize "STR_Process_Partial";
-    };
+    _processConversions call (_materialsRequired + [_minimumConversions]);
+
+    hint format ["%1 %2", localize "STR_NOTF_ItemProcess", _minimumConversions isEqualTo (selectMin _totalConversions) then {"";} else {localize "STR_Process_Partial";}];
 
     life_is_processing = false;
     life_action_inUse = false;
 } else {
-        if (CASH < _noLicenseCost) exitWith {
-        hint format [localize "STR_Process_License",[_noLicenseCost] call life_fnc_numberText];
-        "progressBar" cutText ["","PLAIN"];
-        life_is_processing = false;
-        life_action_inUse = false;
-    };
-
-    for "_i" from 0 to 1 step 0 do {
-        uiSleep  0.9;
-        _cP = _cP + 0.01;
-        _progress progressSetPosition _cP;
-        _pgText ctrlSetText format ["%3 (%1%2)...",round(_cP * 100),"%",_text];
-        if (_cP >= 1) exitWith {};
-        if (player distance _vendor > 10) exitWith {};
-    };
-
-    if (player distance _vendor > 10) exitWith {
-        hint localize "STR_Process_Stay";
-        "progressBar" cutText ["","PLAIN"];
-        life_is_processing = false;
-        life_action_inUse = false;
-    };
-
-    if (CASH < _noLicenseCost) exitWith {
-        hint format [localize "STR_Process_License",[_noLicenseCost] call life_fnc_numberText];
-        "progressBar" cutText ["","PLAIN"];
-        life_is_processing = false;
-        life_action_inUse = false;
-    };
-
-    {
-        _x params ["_item","_count"];
-        [false,_item,_count * (_minimumConversions)] call life_fnc_handleInv;
-        true
-    } count _materialsRequired;
-
-    {
-        _x params ["_item","_count"];
-        [true,_item,_count * (_minimumConversions)] call life_fnc_handleInv;
-        true
-    } count _materialsGiven;
-
-    "progressBar" cutText ["","PLAIN"];
-    if (_minimumConversions isEqualTo (selectMin _totalConversions)) then {
-        hint localize "STR_NOTF_ItemProcess";
-    } else {
-        hint localize "STR_Process_Partial";
-    };
-    CASH = CASH - _noLicenseCost;
-    [0] call SOCK_fnc_updatePartial;
-    life_is_processing = false;
-    life_action_inUse = false;
+    // Code für nicht lizenzierten Zweig
 };
+
+"progressBar" cutText ["","PLAIN"];

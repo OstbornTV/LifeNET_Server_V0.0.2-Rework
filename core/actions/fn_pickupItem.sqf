@@ -2,6 +2,7 @@
 /*
     File: fn_pickupItem.sqf
     Author: Bryan "Tonic" Boardwine
+    Modified by: OsbornTV
 
     Description:
     Master handling for picking up an item.
@@ -12,11 +13,19 @@ params [
 
 #define RELEASE_USE(ENTITY) ENTITY setVariable ["inUse",false,true]
 
-if ((time - life_action_delay) < 2) exitWith {hint localize "STR_NOTF_ActionDelay"; RELEASE_USE(_object);};
-if (isNull _object || {player distance _object > 3}) exitWith {RELEASE_USE(_object);};
+if ((time - life_action_delay) < 2) exitWith {
+    hint localize "STR_NOTF_ActionDelay";
+    RELEASE_USE(_object);
+};
+
+if (isNull _object || {player distance _object > 3}) exitWith {
+    RELEASE_USE(_object);
+};
 
 private _itemInfo = _object getVariable ["item",[]];
-if (_itemInfo isEqualTo []) exitWith {deleteVehicle _object;};
+if (_itemInfo isEqualTo []) exitWith {
+    deleteVehicle _object;
+};
 
 _itemInfo params ["_item", "_value"];
 
@@ -48,7 +57,7 @@ if !(_diff isEqualTo _value) then {
     };
     RELEASE_USE(_object);
 } else {
-        if ([true,_item,_value] call life_fnc_handleInv) then {
+    if ([true,_item,_value] call life_fnc_handleInv) then {
         deleteVehicle _object;
         player playMove "AinvPknlMstpSlayWrflDnon";
         titleText[format [localize "STR_NOTF_Picked",_diff,_itemName],"PLAIN"];

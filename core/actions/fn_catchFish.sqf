@@ -3,16 +3,16 @@
     File: fn_catchFish.sqf
     Author: Bryan "Tonic" Boardwine
     Description:
-    Catches a fish that is near by.
+    Catches a fish that is nearby.
 */
 params [
     ["_fish", objNull, [objNull]]
 ];
 
-//--- Fish is null or distance to fish is more than 3.5 metres
+// Check if the fish is null or the distance to the fish is more than 3.5 meters
 if (isNull _fish || {player distance _fish > 3.5}) exitWith {};
 
-//--- Set Fish Information
+// Set Fish Information
 private _fishInfo = switch typeOf _fish do {
     case "Salema_F": {["STR_ANIM_Salema", "salema_raw"]};
     case "Ornate_random_F": {["STR_ANIM_Ornate", "ornate_raw"]};
@@ -24,18 +24,18 @@ private _fishInfo = switch typeOf _fish do {
     default {["", ""]};
 };
 
-//--- Sort out array
+// Sort out array
 _fishInfo params ["_fishName", "_fishType"];
 
-//--- No fishtype
-if (_fishType isEqualTo "") exitWith {}; //Couldn't get a type
+// Check if fishtype is empty
+if (_fishType isEqualTo "") exitWith {};
 
-//--- Localize name of fish
+// Localize name of fish
 private _fishName = localize _fishName;
 
-//--- Add fish into inventory
-if ([true,_fishType,1] call life_fnc_handleInv) then {
-    //--- Delete fish in water
+// Add fish into inventory
+if ([true, _fishType, 1] call life_fnc_handleInv) then {
+    // Delete fish in water
     deleteVehicle _fish;
 
     titleText [format [localize "STR_NOTF_Fishing", _fishName], "PLAIN"];
