@@ -5,19 +5,28 @@
 
     Description:
     Receives money
+
+    Parameters:
+        _receivingUnit: Der Einheit, die das Geld empfängt.
+        _receivedValue: Der Betrag, der empfangen wird.
+        _giver: Die Einheit, die das Geld gibt.
 */
 
 params [
-    ["_unit",objNull,[objNull]],
-    ["_val","",[""]],
-    ["_from",objNull,[objNull]]
+    ["_receivingUnit", objNull, [objNull]],
+    ["_receivedValue", "", [""]],
+    ["_giver", objNull, [objNull]]
 ];
 
-if (isNull _unit || isNull _from || _val isEqualTo "") exitWith {};
-if !(player isEqualTo _unit) exitWith {};
-if (!([_val] call life_util_fnc_isNumber)) exitWith {};
-if (_unit == _from) exitWith {}; //Bad boy, trying to exploit his way to riches.
+// Überprüfung auf ungültige Parameter oder besondere Fälle
+if (isNull _receivingUnit || isNull _giver || _receivedValue isEqualTo "") exitWith {};
+if !(player isEqualTo _receivingUnit) exitWith {};
+if (!([_receivedValue] call life_util_fnc_isNumber)) exitWith {};
+if (_receivingUnit == _giver) exitWith {}; // Vermeide Selbsttransaktion.
 
-hint format [localize "STR_NOTF_GivenMoney",_from getVariable ["realname",name _from],[(parseNumber (_val))] call life_fnc_numberText];
-CASH = CASH + parseNumber(_val);
+// Benachrichtigung über den erhaltenden Betrag
+hint format [localize "STR_NOTF_GivenMoney", _giver getVariable ["realname", name _giver], [(parseNumber (_receivedValue))] call life_fnc_numberText];
+
+// Geld hinzufügen und Datenbank aktualisieren
+CASH = CASH + parseNumber(_receivedValue);
 [0] call SOCK_fnc_updatePartial;

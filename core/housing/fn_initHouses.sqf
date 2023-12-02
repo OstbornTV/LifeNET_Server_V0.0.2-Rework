@@ -1,19 +1,32 @@
+#include "..\..\script_macros.hpp"
 /*
-    File: fn_initHouses.sqf
-    Author: Bryan "Tonic" Boardwine
+    Datei: fn_initHouses.sqf
+    Autor: Bryan "Tonic" Boardwine
 
-    Description:
-    Initializes the players houses, mainly throwing down markers.
+    Beschreibung:
+    Initialisiert die Häuser der Spieler, indem für jedes Haus Marker erstellt werden.
+
 */
-if (life_houses isEqualTo []) exitWith {}; //Nothing to do.
+
+if (life_houses isEqualTo []) exitWith {}; // Falls es keine Häuser gibt, beende das Skript.
 
 {
-    _position = call compile format ["%1",_x select 0];
+    // Extrahiere die Position direkt aus dem Array.
+    _position = _x select 0;
+
+    // Finde das nächstgelegene Hausobjekt.
     _house = nearestObject [_position, "House"];
-    _house setVariable ["uid",round(random 99999),true];
+
+    // Setze eine eindeutige Kennung (UID) für das Haus.
+    _house setVariable ["uid", floor(random 99999), true];
+
+    // Hole den Anzeigenamen des Hauses aus seiner Konfiguration.
     _houseName = getText(configFile >> "CfgVehicles" >> (typeOf _house) >> "displayName");
 
-    _marker = createMarkerLocal [format ["house_%1",(_house getVariable "uid")],_position];
+    // Erstelle einen lokalen Marker für das Haus.
+    _marker = createMarkerLocal [format ["house_%1", (_house getVariable "uid")], _position];
+
+    // Setze Marker-Eigenschaften.
     _marker setMarkerTextLocal _houseName;
     _marker setMarkerColorLocal "ColorBlue";
     _marker setMarkerTypeLocal "loc_Lighthouse";

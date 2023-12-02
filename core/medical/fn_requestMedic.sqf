@@ -1,26 +1,27 @@
 #include "..\..\script_macros.hpp"
 /*
-    File: fn_requestMedic.sqf
-    Author: Bryan "Tonic" Boardwine
+    Datei: fn_requestMedic.sqf
+    Autor: Bryan "Tonic" Boardwine
+    Edit: OsbornTV
 
-    Description:
-    N/A
+    Beschreibung:
+    Sendet eine Anfrage an Medics (Independent)
 */
+
+// Überprüfe, ob Medics (Independent) im Raum sind.
 private "_medicsOnline";
-_medicsOnline = {!(_x isEqualTo player) && {side _x isEqualTo independent} && {alive _x}} count playableUnits > 0; //Check if medics (indep) are in the room.
+_medicsOnline = {!(_x isEqualTo player) && {side _x isEqualTo independent} && {alive _x}} count playableUnits > 0;
 
-life_corpse setVariable ["Revive",false,true]; //Set the corpse to a revivable state.
+// Setze die Variable "Revive" für die Leiche auf false, um sie wiederbelebbar zu machen.
+life_corpse setVariable ["Revive", false, true];
+
 if (_medicsOnline) then {
-    //There is medics let's send them the request.
-    [life_corpse, profileName] remoteExecCall ["life_fnc_medicRequest",independent];
-    } else {
-    //No medics were online, send it to the police.
-    [life_corpse, profileName] remoteExecCall ["life_fnc_medicRequest",west];
-};
+    // Es gibt Medics, lassen Sie uns ihnen die Anfrage senden.
+    [life_corpse, profileName] remoteExecCall ["life_fnc_medicRequest", independent];
+}
 
-
-//Create a thread to monitor duration since last request (prevent spammage).
-[] spawn  {
+// Erstelle einen Thread, um die vergangene Zeit seit der letzten Anfrage zu überwachen (um Spam zu verhindern).
+[] spawn {
     ((findDisplay 7300) displayCtrl 7303) ctrlEnable false;
     sleep (2 * 60);
     ((findDisplay 7300) displayCtrl 7303) ctrlEnable true;

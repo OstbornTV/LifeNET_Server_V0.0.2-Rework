@@ -11,18 +11,25 @@ params [
     ["_house", "", [""]]
 ];
 
-if (_house isEqualTo "") exitWith {[]}; 
+// Überprüfen, ob _house leer ist
+if (_house isEqualTo "") exitWith {[]};
 
-private _houseConfig = missionConfigFile >> "Housing" >> worldName >> _house; 
-private _garageConfig = missionConfigFile >> "Garages" >> worldName >> _house; 
+// Konfigurationsdaten für das Haus und die Garage erhalten
+private _houseConfig = missionConfigFile >> "Housing" >> worldName >> _house;
+private _garageConfig = missionConfigFile >> "Garages" >> worldName >> _house;
 
-private _config = [_garageConfig,_houseConfig] select {isClass _x};
+// Überprüfen, ob beide Konfigurationen Klassen sind
+private _config = [_garageConfig, _houseConfig] select {isClass _x};
 
+// Exit, wenn keine gültige Konfiguration gefunden wurde
 if (_config isEqualTo []) exitWith {[]};
 
-_config = _config select 0; 
-private _price = getNumber(_config >> "price"); 
+// Die Garage-Konfiguration auswählen
+_config = _config select 0;
+
+// Preis und Anzahl der Kisten aus der Konfiguration extrahieren
+private _price = getNumber(_config >> "price");
 private _numberCrates = if (_houseConfig isEqualTo _config) then {getNumber(_houseConfig >> "numberCrates")} else {0};
 
-//Return
-[_price,_numberCrates]
+// Rückgabewert
+[_price, _numberCrates]

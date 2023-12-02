@@ -1,14 +1,14 @@
 #include "..\..\script_macros.hpp"
 /*
-File: fn_medicMarkers.sqf
-Author: Bryan "tonic" Boardwine
+    File: fn_medicMarkers.sqf
+    Author: Bryan "tonic" Boardwine
 
-Description:
-Marks downed players on the map when it's open.
+    Description:
+    Marks downed players and medics on the map when it's open.
 */
-private _deadMarkers = [];
-private _medicMarkers = [];
 
+// Erstellen von Medics-Markern
+private _medicMarkers = [];
 {
     private _marker = createMarkerlocal [format ["%1_marker", netId _x], getPosATL _x];
     _marker setMarkerColorLocal "Colorindependent";
@@ -17,6 +17,8 @@ private _medicMarkers = [];
     _medicMarkers pushBack [_marker, _x];
 } forEach ((units independent) - [player]);
 
+// Erstellen von Markern für bewusstlose Spieler
+private _deadMarkers = [];
 {
     private _name = _x getVariable "name";
     private _down = _x getVariable ["Revive", false];
@@ -29,6 +31,7 @@ private _medicMarkers = [];
     };
 } forEach allDeadMen;
 
+// Aktualisieren der Marker, solange die Karte sichtbar ist
 while {visibleMap} do {
     {
         _x params [
@@ -42,11 +45,8 @@ while {visibleMap} do {
     uiSleep 0.01;
 };
 
+// Löschen der erstellten Marker, wenn die Karte nicht mehr sichtbar ist
 {
     _x params [["_mark", ""]];
     deleteMarkerlocal _mark;
-} forEach _medicMarkers;
-
-{
-    deleteMarkerlocal _x;
-} forEach _deadMarkers;
+} forEach (_medicMarkers + _deadMarkers);

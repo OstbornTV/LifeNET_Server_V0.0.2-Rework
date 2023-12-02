@@ -4,26 +4,34 @@
     Author: Bryan "Tonic" Boardwine
 
     Description:
-    Starts the "Demo" timer for the police.
+    Startet den "Demo"-Timer für die Polizei.
 */
 
 disableSerialization;
 
-"lifeTimer" cutRsc ["life_timer","PLAIN"];
+// Erstellt das Timer-Element auf dem Bildschirm
+"lifeTimer" cutRsc ["life_timer", "PLAIN"];
 private _uiDisp = uiNamespace getVariable "life_timer";
 private _timer = _uiDisp displayCtrl 38301;
-private _time = LIFE_SETTINGS(getNumber,"fed_chargeTime") * 60;
+private _time = LIFE_SETTINGS(getNumber, "fed_chargeTime") * 60; // Zeit in Sekunden
 
+// Schleife, die den Timer herunterzählt
 for "_i" from _time to 0 step -1 do {
+    // Überprüft, ob das Timer-Element vorhanden ist
     if (isNull _uiDisp) then {
-        "lifeTimer" cutRsc ["life_timer","PLAIN"];
+        "lifeTimer" cutRsc ["life_timer", "PLAIN"];
         _uiDisp = uiNamespace getVariable "life_timer";
         _timer = _uiDisp displayCtrl 38301;
     };
 
-    if (!(fed_bank getVariable ["chargeplaced",false])) exitWith {};
-    _timer ctrlSetText ([_i,"MM:SS"] call BIS_fnc_secondsToString);
-    uiSleep 1;
+    // Überprüft, ob die "Demo"-Ladung platziert wurde
+    if (!(fed_bank getVariable ["chargeplaced", false])) exitWith {};
+
+    // Setzt den Text des Timers auf die verbleibende Zeit im Format MM:SS
+    _timer ctrlSetText ([_i, "MM:SS"] call BIS_fnc_secondsToString);
+    
+    uiSleep 1; // Kurze Verzögerung für die Anzeige in Sekunden
 };
 
-"lifeTimer" cutText ["","PLAIN"];
+// Entfernt das Timer-Element vom Bildschirm
+"lifeTimer" cutText ["", "PLAIN"];

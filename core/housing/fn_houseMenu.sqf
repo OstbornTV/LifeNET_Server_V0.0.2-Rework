@@ -1,11 +1,28 @@
 #include "..\..\script_macros.hpp"
 /*
-File: fn_houseMenu.sqf
-Author: Bryan "tonic" Boardwine
+    File: fn_houseMenu.sqf
+    Author: Bryan "tonic" Boardwine
 
-Description:
-Building interaction menu
+    Description:
+    Gebäude-Interaktionsmenü
+
+    Definierte Steuerelemente:
+    - Btn1 bis Btn8: Nummern für Steuerelemente im Dialog
+    - Title: Nummer für den Titel im Dialog
+
+    Parameter:
+    - _this select 0: Das Gebäudeobjekt, für das das Menü angezeigt wird.
+
+    Globale Variablen:
+    - life_pinact_curTarget: Aktuelles Ziel für Gebäudeaktionen.
+
+    Rückgabewerte:
+    - Keine
+
+    Aktionen:
+    - Zeigt ein interaktives Menü basierend auf dem Gebäudeobjekt an.
 */
+
 #define Btn1 37450
 #define Btn2 37451
 #define Btn3 37452
@@ -19,14 +36,20 @@ Building interaction menu
 private ["_display", "_curTarget", "_Btn1", "_Btn2", "_Btn3", "_Btn4", "_Btn5", "_Btn6", "_Btn7", "_Btn8"];
 disableSerialization;
 _curTarget = param [0, objNull, [objNull]];
+
+// Überprüfe, ob das Ziel gültig ist
 if (isNull _curTarget) exitwith {};
 _houseCfg = [(typeOf _curTarget)] call life_fnc_houseConfig;
+
+// Überprüfe, ob das Ziel ein gültiges Gebäude ist und der Spieler ein Zivilist ist
 if (count _houseCfg isEqualto 0 && playerside isEqualto civilian) exitwith {};
 
+// Erstelle den Dialog, wenn er nicht existiert
 if (!dialog) then {
     createdialog "pinteraction_Menu";
 };
 
+// Initialisiere Steuerelemente im Dialog
 _Btn1 = CONTROL(37400, Btn1);
 _Btn2 = CONTROL(37400, Btn2);
 _Btn3 = CONTROL(37400, Btn3);
@@ -35,15 +58,20 @@ _Btn5 = CONTROL(37400, Btn5);
 _Btn6 = CONTROL(37400, Btn6);
 _Btn7 = CONTROL(37400, Btn7);
 _Btn8 = CONTROL(37400, Btn8);
+
+// Verstecke alle Steuerelemente im Dialog
 {_x ctrlShow false;} forEach [_Btn1, _Btn2, _Btn3, _Btn4, _Btn5, _Btn6, _Btn7, _Btn8];
 
+// Setze das aktuelle Ziel für Gebäudeaktionen
 life_pinact_curTarget = _curTarget;
 
+// Überprüfe, ob das Ziel ein Versteckgebäude ist
 if (_curTarget in life_hideoutBuildings) exitwith {
     closedialog 0;
     hint localize "str_House_Hideout";
 };
 
+// Überprüfe, ob das Ziel ein westliches Haus ist
 if (_curTarget isKindOf "House_F" && playerside isEqualto west) exitwith {
     private _vaultHouse = [[["WL_Rosche", "land_Research_house_V1_F"]]] call life_util_fnc_terrainsort;
     private _wl_roscheArray = [16019.5, 16952.9, 0];
@@ -87,9 +115,8 @@ if (_curTarget isKindOf "House_F" && playerside isEqualto west) exitwith {
     };
 };
 
-if (!(_curTarget in life_vehicles) || isnil {
-    _curTarget getVariable "house_owner"
-}) then {
+// Überprüfe, ob das Ziel ein nicht-Fahrzeug oder ein Haus ohne Eigentümer ist
+if (!(_curTarget in life_vehicles) || isnil {_curTarget getVariable "house_owner"}) then {
     private _isHouse = (isClass (missionConfigFile >> "Housing" >> worldName >> typeOf _curTarget));
     private _buildingPurchasestring = [
         "str_pinAct_BuyGarage",
@@ -155,8 +182,7 @@ if (!(_curTarget in life_vehicles) || isnil {
         _Btn3 buttonsetAction "closedialog 0; [life_pinact_curTarget] call life_fnc_lightHouseaction;";
         _Btn3 ctrlShow true;
         
-        if (getNumber (missionConfigFile >> "Housing" >> worldName >> (typeOf _curTarget) >> "canGarage") isEqualto 1 && {
-            !(_curTarget getVariable ["blacklistedGarage", false])
+        if (getNumber (missionConfigFile >> "Housing" >> worldName >> (typeOf _curTarget) >> "canGarage") isEqualto 1 && {!(_curTarget getVariable ["blacklistedGarage", false])
         }) then {
             if (_curTarget getVariable ["garageBought", false]) then {
                 _Btn4 ctrlsettext localize "str_pinAct_SellGarage";

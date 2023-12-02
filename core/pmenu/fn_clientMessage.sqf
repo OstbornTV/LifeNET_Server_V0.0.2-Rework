@@ -1,75 +1,95 @@
 #include "..\..\script_macros.hpp"
 /*
-    File: fn_clientMessage.sqf
-    Author: Bryan "Tonic" Boardwine
-    Description:
-        displays a received message
+    Datei: fn_clientMessage.sqf
+    Autor: Bryan "Tonic" Boardwine
+    Beschreibung: Zeigt eine empfangene Nachricht an
 */
 params [
-    ["_msg", "", [""]],
-    ["_from", "", [""]],
-    ["_type", "", [""]],
-    ["_loc", "Unknown", [""]]
+    ["_msg", "", [""]],            // Nachrichtentext
+    ["_from", "", [""]],           // Absender
+    ["_type", "", [""]],           // Nachrichtentyp (Cop, Med, Admin, AdminAll, AdminToPlayer)
+    ["_loc", "Unknown", [""]]      // Ort (standardmäßig "Unknown")
 ];
 
+// Wenn Absender oder Nachricht leer sind, wird abgebrochen
 if (_from isEqualTo "" || {_msg isEqualTo ""}) exitWith {};
 private _message = "";
 
+// Je nach Nachrichtentyp werden unterschiedliche Aktionen durchgeführt
 switch (toLower _type) do {
     case "cop" : {
         if !(playerSide isEqualTo west) exitWith {};
-        _message = format ["--- 911 DISPATCH FROM %1: %2",_from,_msg];
+        _message = format ["--- 110 DISPATCH VON %1: %2",_from,_msg];
 
-        hint parseText format ["<t color='#316dff'><t size='2'><t align='center'>New Dispatch<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>All Officers<br/><t color='#33CC33'>From: <t color='#ffffff'>%1<br/><t color='#33CC33'>Coords: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%3",_from,_loc,_msg];
+        // Benachrichtigung für Polizei
+        hint parseText format ["<t color='#316dff'><t size='2'><t align='center'>Neue Meldung<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Alle Beamte<br/><t color='#33CC33'>Von: <t color='#ffffff'>%1<br/><t color='#33CC33'>Koordinaten: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Nachricht:<br/><t color='#ffffff'>%3",_from,_loc,_msg];
 
-        ["PoliceDispatch",[format ["A New Police Report From: %1",_from]]] call bis_fnc_showNotification;
+        // Benachrichtigung im Spiel
+        ["PoliceDispatch",[format ["Neuer Polizeibericht von: %1",_from]]] call bis_fnc_showNotification;
     };
 
     case "med": {
         if !(playerSide isEqualTo independent) exitWith {};
 
-        _message = format ["!!! EMS REQUEST: %1",_msg];
-        hint parseText format ["<t color='#FFCC00'><t size='2'><t align='center'>EMS Request<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>You<br/><t color='#33CC33'>From: <t color='#ffffff'>%1<br/><t color='#33CC33'>Coords: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%3",_from,_loc,_msg];
+        _message = format ["!!! 112 ANFRAGE: %1",_msg];
 
-        ["TextMessage",[format ["EMS Request from %1",_from]]] call bis_fnc_showNotification;
+        // Benachrichtigung für Sanitäter
+        hint parseText format ["<t color='#FFCC00'><t size='2'><t align='center'>112 Anfrage<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Euch<br/><t color='#33CC33'>Von: <t color='#ffffff'>%1<br/><t color='#33CC33'>Koordinaten: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Nachricht:<br/><t color='#ffffff'>%3",_from,_loc,_msg];
+
+        // Benachrichtigung im Spiel
+        ["TextMessage",[format ["112-Anfrage von %1",_from]]] call bis_fnc_showNotification;
     };
 
     case "admin" : {
+        // Nur wenn Spieler Admin-Rechte haben
         if ((call life_adminlevel) < 1) exitWith {};
-        _message = format ["!!! ADMIN REQUEST FROM %1: %2",_from,_msg];
+        _message = format ["!!! ADMIN ANFRAGE VON %1: %2",_from,_msg];
 
-        hint parseText format ["<t color='#ffcefe'><t size='2'><t align='center'>Admin Request<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>Admins<br/><t color='#33CC33'>From: <t color='#ffffff'>%1<br/><t color='#33CC33'>Coords: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%3",_from,_loc,_msg];
+        // Benachrichtigung für Admins
+        hint parseText format ["<t color='#ffcefe'><t size='2'><t align='center'>Admin-Anfrage<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Admins<br/><t color='#33CC33'>Von: <t color='#ffffff'>%1<br/><t color='#33CC33'>Koordinaten: <t color='#ffffff'>%2<br/><br/><t color='#33CC33'>Nachricht:<br/><t color='#ffffff'>%3",_from,_loc,_msg];
 
-        ["AdminDispatch",[format ["%1 Has Requested An Admin!",_from]]] call bis_fnc_showNotification;
+        // Benachrichtigung im Spiel
+        ["AdminDispatch",[format ["%1 hat einen Admin angefordert!",_from]]] call bis_fnc_showNotification;
     };
 
     case "adminall" : {
-        _message = format ["!!! ADMIN MESSAGE: %1",_msg];
-        _admin = format ["Sent by admin: %1", _from];
-        hint parseText format ["<t color='#FF0000'><t size='2'><t align='center'>Admin Message<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>You<br/><t color='#33CC33'>From: <t color='#ffffff'>An Admin<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%1",_msg];
+        _message = format ["!!! ADMIN NACHRICHT: %1",_msg];
+        _admin = format ["Gesendet von Admin: %1", _from];
 
-        ["AdminMessage",["You Have Received A Message From An Admin!"]] call bis_fnc_showNotification;
+        // Benachrichtigung für alle Spieler
+        hint parseText format ["<t color='#FF0000'><t size='2'><t align='center'>Admin-Nachricht<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Dich<br/><t color='#33CC33'>Von: <t color='#ffffff'>Ein Admin<br/><br/><t color='#33CC33'>Nachricht:<br/><t color='#ffffff'>%1",_msg];
+
+        // Benachrichtigung im Spiel
+        ["AdminMessage",["Du hast eine Nachricht von einem Admin erhalten!"]] call bis_fnc_showNotification;
+        // Wenn Admin-Level größer als 0, dann zusätzlich im globalen Chat ausgeben
         if ((call life_adminlevel) > 0) then {systemChat _admin;};
     };
 
     case "admintoplayer": {
-        _message = format ["!!!ADMIN MESSAGE: %1",_msg];
+        _message = format ["!!!ADMIN NACHRICHT: %1",_msg];
 
-        hint parseText format ["<t color='#FF0000'><t size='2'><t align='center'>Admin Message<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>All Players<br/><t color='#33CC33'>From: <t color='#ffffff'>The Admins<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%1",_msg];
+        // Benachrichtigung für alle Spieler
+        hint parseText format ["<t color='#FF0000'><t size='2'><t align='center'>Admin-Nachricht<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Alle Spieler<br/><t color='#33CC33'>Von: <t color='#ffffff'>Die Admins<br/><br/><t color='#33CC33'>Nachricht:<br/><t color='#ffffff'>%1",_msg];
 
-        ["AdminMessage",["You Have Received A Message From An Admin!"]] call bis_fnc_showNotification;
+        // Benachrichtigung im Spiel
+        ["AdminMessage",["Du hast eine Nachricht von einem Admin erhalten!"]] call bis_fnc_showNotification;
+        // Wenn Admin-Level größer als 0, dann zusätzlich im globalen Chat ausgeben
         if ((call life_adminlevel) > 0) then {
-            private _admin = format ["Sent by admin: %1", _from];
+            private _admin = format ["Gesendet von Admin: %1", _from];
             systemChat _admin;
         };
     };
 
     default {
-        _message = format [">>>MESSAGE FROM %1: %2",_from,_msg];
-        hint parseText format ["<t color='#FFCC00'><t size='2'><t align='center'>New Message<br/><br/><t color='#33CC33'><t align='left'><t size='1'>To: <t color='#ffffff'>You<br/><t color='#33CC33'>From: <t color='#ffffff'>%1<br/><br/><t color='#33CC33'>Message:<br/><t color='#ffffff'>%2",_from,_msg];
+        _message = format [">>>NACHRICHT VON %1: %2",_from,_msg];
 
-        ["TextMessage",[format ["You Received A New Private Message From %1",_from]]] call bis_fnc_showNotification;
+        // Benachrichtigung für private Nachrichten
+        hint parseText format ["<t color='#FFCC00'><t size='2'><t align='center'>Neue Nachricht<br/><br/><t color='#33CC33'><t align='left'><t size='1'>An: <t color='#ffffff'>Dich<br/><t color='#33CC33'>Von: <t color='#ffffff'>%1<br/><br/><t color='#33CC33'>Nachricht:<br/><t color='#ffffff'>%2",_from,_msg];
+
+        // Benachrichtigung im Spiel
+        ["TextMessage",[format ["Du hast eine neue private Nachricht von %1 erhalten",_from]]] call bis_fnc_showNotification;
     };
 };
 
+// Nachricht auch im globalen Chat ausgeben
 systemChat _message;

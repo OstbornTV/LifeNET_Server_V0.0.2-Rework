@@ -3,32 +3,36 @@
     @version: 1.7
     @file_name: fn_fetchCfgDetails.sqf
     @file_author: TAW_Tonic
-    @file_edit: 8/2/2013
-    @file_description: Fetch information about the entities config
+    @file_editer: OsbornTV
+    @file_edit: 12/1/2023
+    @file_description: Informationen über die Konfiguration des Entitäten abrufen
 
     USAGE:
-    [Classname,Cfg* (Optional)] call VAS_fnc_fetchCfgDetails;
+    [Klassenname, Cfg* (Optional)] call VAS_fnc_fetchCfgDetails;
 
     Return:
-    0: classname
-    1: displayname
-    2: picture
-    3: scope
-    4: type
-    5: itemInfo Type (if any, -1 means none)
-    6: Cfg Location i.e CfgWeapons
-    7: Magazines
-    8: Muzzles
-    9: Short Description
+    0: Klassenname
+    1: Anzeigename
+    2: Bild
+    3: Scope
+    4: Typ
+    5: itemInfo Typ (falls vorhanden, -1 bedeutet keiner)
+    6: Cfg Standort, z.B. CfgWeapons
+    7: Magazine
+    8: Mündungen
+    9: Kurzbeschreibung
     10: acc_Pointers
-    11: acc_Optics
-    12: acc_Muzzles
-    13: Base (Superclass)
-    14: New compatibleItems Structure
+    11: acc_Optiken
+    12: acc_Mündungen
+    13: Basisklasse (Superclass)
+    14: Neue kompatibleItems-Struktur
 */
-private ["_className","_section","_type","_accPointer","_accMuzzle","_accOptic","_classes","_itemInfo","_magazines","_scope","_config","_displayName"];
-_className = [_this,0,"",[""]] call BIS_fnc_param;
-_section = [_this,1,"",[""]] call BIS_fnc_param;
+
+private ["_className", "_section", "_type", "_accPointer", "_accMuzzle", "_accOptic", "_classes", "_itemInfo", "_magazines", "_scope", "_config", "_displayName"];
+
+_className = [_this, 0, "", [""]] call BIS_fnc_param;
+_section = [_this, 1, "", [""]] call BIS_fnc_param;
+
 if (_className isEqualTo "") exitWith {[]};
 
 _type = -1;
@@ -52,14 +56,14 @@ if (_section isEqualTo "") then {
 };
 
 if (!(_section isEqualType "") || {!isClass(configFile >> _section >> _className)} || {_section isEqualTo ""}) exitWith {[]};
+
 _config = configFile >> _section >> _className;
 _displayName = getText(_config >> "displayName");
 _picture = getText(_config >> "picture");
 _desc = getText(_config >> "descriptionshort");
 _base = inheritsFrom _config;
 
-switch (_section) do
-{
+switch (_section) do {
     case "CfgVehicles": {
         _type = getText(_config >> "vehicleClass");
         _scope = getNumber(_config >> "scope");
@@ -70,14 +74,14 @@ switch (_section) do
         _type = getNumber(_config >> "type");
         _desc = getText(_config >> "descriptionshort");
 
-        //Compatible attachments
-        if (isClass (_config >> "WeaponSlotsInfo")) then
-        {
+        // Kompatible Anhänge
+        if (isClass (_config >> "WeaponSlotsInfo")) then {
             _accPointer = getArray(_config >> "WeaponSlotsInfo" >> "PointerSlot" >> "compatibleItems");
             _accOptic = getArray(_config >> "WeaponSlotsInfo" >> "CowsSlot" >> "compatibleItems");
             _accMuzzle = getArray(_config >> "WeaponSlotsInfo" >> "MuzzleSlot" >> "compatibleItems");
 
-            {    private "_thiscfgitem";
+            {    
+                private "_thiscfgitem";
                 for "_i" from 0 to (count(_x) - 1) do {
                     _thiscfgitem = _x select _i;
                     if (isClass _thiscfgitem) then {
@@ -86,7 +90,7 @@ switch (_section) do
                         };
                     };
                 };
-            } forEach ([_config>>"WeaponSlotsInfo"] call bis_fnc_returnParents);
+            } forEach ([_config >> "WeaponSlotsInfo"] call bis_fnc_returnParents);
         };
 
         if (isClass (_config >> "ItemInfo")) then {
@@ -117,5 +121,6 @@ if (!isNil "_classes") then {
     _classes = _classes - ["CowsSlot"];
     _classes = _classes - ["PointerSlot"];
 };
-_return = [_className,_displayName,_picture,_scope,_type,_itemInfo,_section,_magazines,_muzzles,_desc,_accPointer,_accOptic,_accMuzzle,_base,_classes];
+
+_return = [_className, _displayName, _picture, _scope, _type, _itemInfo, _section, _magazines, _muzzles, _desc, _accPointer, _accOptic, _accMuzzle, _base, _classes];
 _return;

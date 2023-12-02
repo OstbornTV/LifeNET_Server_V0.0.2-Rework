@@ -1,17 +1,30 @@
 #include "..\..\script_macros.hpp"
 /*
- File: fn_seizeWeapon.sqf
- Author: Skalicon
- Modified by powerafro2
- Beschreibung: Entfernt Objekte auf dem Boden
+    File: fn_seizeWeapon.sqf
+    Author: Skalicon
+    Modified by powerafro2
+    Beschreibung: Entfernt Objekte auf dem Boden
 */
-_clear = nearestObjects [player,["weaponholder"],3];
+
+// Finde "weaponholder"-Objekte in der Nähe des Spielers innerhalb eines Radius von 3 Metern.
+_clear = nearestObjects [player, ["weaponholder"], 3];
+
+// Zähler für die zerstörten Objekte initialisieren.
 _destroyed = 0;
-for "_i" from 0 to count _clear - 1 
-do
+
+// Durchlaufe alle gefundenen "weaponholder"-Objekte.
 {
- _destroyed = _destroyed + 1;
- deleteVehicle (_clear select _i);
- sleep 0.1;
-};
-titleText[hint localize["%1 Sachen auf dem Boden wurden von den Ameisen gefressen.", _destroyed],"PLAIN"];
+    // Erhöhe den Zähler für jedes gelöschte Objekt.
+    _destroyed = _destroyed + 1;
+
+    // Lösche das "weaponholder"-Objekt.
+    deleteVehicle _x;
+
+    // Kurze Pause, um mögliche Konflikte zu vermeiden.
+    sleep 0.1;
+
+// forEach-Loop beenden.
+} forEach _clear;
+
+// Anzeige über zerstörte Objekte.
+titleText[hint format ["%1 Sachen auf dem Boden wurden entfernt.", _destroyed], "PLAIN"];

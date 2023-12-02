@@ -1,44 +1,46 @@
 /*
     File: fn_fetchVehInfo.sqf
     Author: Bryan "Tonic" Boardwine
+    Edit: OsbornTV
 
     Description:
-    Used in returning information about a vehicle from Config >> "CfgVehicles"
+    Wird verwendet, um Informationen über ein Fahrzeug aus Config >> "CfgVehicles" zurückzugeben.
 
     Return:
-    0: classname
-    1: scope
-    2: picture
-    3: displayname
-    4: vehicleclass
-    5: side
-    6: faction
-    7: Base / Superclass
-    8: Max Speed
-    9: Armor Rating
-    10: Passenger Seats
-    11: Max Horse power
-    12: Fuel Capacity
+    0: Klassenname
+    1: Scope
+    2: Bild
+    3: Anzeigename
+    4: Fahrzeugklasse
+    5: Seite
+    6: Fraktion
+    7: Basis / Superklasse
+    8: Max. Geschwindigkeit
+    9: Panzerungsbewertung
+    10: Passagiersitze
+    11: Max. Pferdestärken
+    12: Kraftstoffkapazität
 */
 params [
-    ["_class","",[""]]
+    ["_class", "", [""]]
 ];
 
-if (_class isEqualTo "") exitWith {[]}; //Bad class passed.
+if (_class isEqualTo "") exitWith {[]}; // Ungültige Klasse übergeben.
 private _config = configFile >> "CfgVehicles" >> _class;
-if (!isClass _config) exitWith {[]}; //Class doesn't exist in CfgVehicles
+if (!isClass _config) exitWith {[]}; // Klasse existiert nicht in CfgVehicles
 
-private _scope = getNumber (_config >> "scope");
-private _picture = getText (_config >> "picture");
-private _displayName = getText (_config >> "displayName");
-private _vehicleClass = getText (_config >> "vehicleClass");
-private _side = getNumber (_config >> "side");
-private _faction = getText (_config >> "faction");
+private _scope = getNumber(_config >> "scope");
+private _picture = getText(_config >> "picture");
+private _displayName = getText(_config >> "displayName");
+private _vehicleClass = getText(_config >> "vehicleClass");
+private _side = getNumber(_config >> "side");
+private _faction = getText(_config >> "faction");
 private _superClass = inheritsFrom _config;
-private _speed = getNumber (_config >> "maxSpeed");
-private _armor = getNumber (_config >> "armor");
-private _seats = getNumber (_config >> "transportSoldier") + count ("true" configClasses (_config >> "Turrets")); //number of seats = number of passengers + number of vehicle turrets
-private _hp = getNumber (_config >> "enginePower");
-private _fuel = getNumber (_config >> "fuelCapacity");
+private _speed = getNumber(_config >> "maxSpeed");
+private _armor = getNumber(_config >> "armor");
+// Anzahl der Sitze = Anzahl der Passagiere + Anzahl der Fahrzeugtürme
+private _seats = getNumber(_config >> "transportSoldier") + count("true" configClasses (_config >> "Turrets"));
+private _hp = getNumber(_config >> "enginePower");
+private _fuel = getNumber(_config >> "fuelCapacity");
 
-[_class,_scope,_picture,_displayName,_vehicleClass,_side,_faction,_superClass,_speed,_armor,_seats,_hp,_fuel];
+[_class, _scope, _picture, _displayName, _vehicleClass, _side, _faction, _superClass, _speed, _armor, _seats, _hp, _fuel];

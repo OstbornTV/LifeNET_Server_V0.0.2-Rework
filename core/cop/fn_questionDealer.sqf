@@ -8,22 +8,26 @@
 */
 
 params [
-    ["_dealer", objNull, [objNull]]
+    ["_dealer", objNull, [objNull]] // Parameter für den Dealer (leerer Standardwert)
 ];
 
+// Holen Sie sich die Verkäufer des Dealers
 private _sellers = _dealer getVariable ["sellers", []];
 
+// Wenn keine Verkäufer vorhanden sind, beenden Sie den Vorgang
 if (_sellers isEqualTo []) exitWith {
-    hint localize "STR_Cop_DealerQuestion"
+    hint localize "STR_Cop_DealerQuestion";
 };
 
-life_action_inUse = true;
-private _crimes = LIFE_SETTINGS(getArray,"crimes");
+life_action_inUse = true; // Markieren Sie, dass eine Aktion im Gange ist
+private _crimes = LIFE_SETTINGS(getArray,"crimes"); // Holen Sie sich die Liste der Verbrechen
 
 private _names = "";
 {
     _x params ["_uid","_name","_value"];
     private _val = 0;
+
+    // Überprüfen Sie den Wert des Verkaufs und berechnen Sie das Verbrechen basierend darauf
     if (_value > 150000) then {
         _val = round(_value / 16);
     } else {
@@ -33,12 +37,15 @@ private _names = "";
             _val = parseNumber _val;
         };
     };
-    [_uid,_name,"483",_val] remoteExecCall ["life_fnc_wantedAdd",RSERV];
-    _names = _names + format ["%1<br/>",_name];
+
+    // Fügen Sie den Verkäufer zur Fahndungsliste hinzu
+    [_uid, _name, "483", _val] remoteExecCall ["life_fnc_wantedAdd", RSERV];
+    _names = _names + format ["%1<br/>", _name];
 
     true
 } count _sellers;
 
-hint parseText format [(localize "STR_Cop_DealerMSG")+ "<br/><br/>%1",_names];
-_dealer setVariable ["sellers",[],true];
-life_action_inUse = false;
+// Benachrichtigung über den erfolgreichen Abschluss
+hint parseText format [(localize "STR_Cop_DealerMSG") + "<br/><br/>%1", _names];
+_dealer setVariable ["sellers", [], true]; // Leeren Sie die Verkäuferliste des Dealers
+life_action_inUse = false; // Markieren Sie, dass die Aktion abgeschlossen ist

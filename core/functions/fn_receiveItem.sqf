@@ -5,28 +5,44 @@
 
     Description:
     Receive an item from a player.
+
+    Parameters:
+        _receivingUnit: Die Einheit, die das Element empfängt.
+        _receivedValue: Der Wert des empfangenen Elements.
+        _itemName: Der Name des empfangenen Elements.
+        _giver: Die Einheit, die das Element gibt.
 */
-private ["_unit","_val","_item","_from","_diff"];
-_unit = _this select 0;
-if !(_unit isEqualTo player) exitWith {};
-_val = _this select 1;
-_item = _this select 2;
-_from = _this select 3;
 
-_diff = [_item,(parseNumber _val),life_carryWeight,life_maxWeight] call life_fnc_calWeightDiff;
+private ["_receivingUnit", "_receivedValue", "_itemName", "_giver", "_weightDiff"];
 
-if (!(_diff isEqualTo (parseNumber _val))) then {
-    if ([true,_item,_diff] call life_fnc_handleInv) then {
-        hint format [localize "STR_MISC_TooMuch_3",_from getVariable ["realname",name _from],_val,_diff,((parseNumber _val) - _diff)];
-        [_from,_item,str((parseNumber _val) - _diff),_unit] remoteExecCall ["life_fnc_giveDiff",_from];
+// Parameter zuweisen
+_receivingUnit = _this select 0;
+if !(_receivingUnit isEqualTo player) exitWith {};
+_receivedValue = _this select 1;
+_itemName = _this select 2;
+_giver = _this select 3;
+
+// Gewichtsdifferenz berechnen
+_weightDiff = [_itemName, (parseNumber _receivedValue), life_carryWeight, life_maxWeight] call life_fnc_calWeightDiff;
+
+// Überprüfen, ob das Gewicht gültig ist
+if (!(_weightDiff isEqualTo (parseNumber _receivedValue))) then {
+    // Überprüfen, ob das Item im Inventar des Gebers ist
+    if ([true, _itemName, _weightDiff] call life_fnc_handleInv) then {
+        hint format [localize "STR_MISC_TooMuch_3", _giver getVariable ["realname", name _giver], _receivedValue, _weightDiff, ((parseNumber _receivedValue) - _weightDiff)];
+        [_giver, _itemName, str((parseNumber _receivedValue) - _weightDiff), _receivingUnit] remoteExecCall ["life_fnc_giveDiff", _giver];
     } else {
-        [_from,_item,_val,_unit,false] remoteExecCall ["life_fnc_giveDiff",_from];
+        // Wenn nicht genug Platz im Inventar des Empfängers ist, die Differenz zurückgeben
+        [_giver, _itemName, _receivedValue, _receivingUnit, false] remoteExecCall ["life_fnc_giveDiff", _giver];
     };
 } else {
-    if ([true,_item,(parseNumber _val)] call life_fnc_handleInv) then {
-        private _type = M_CONFIG(getText,"VirtualItems",_item,"displayName");
-        hint format [localize "STR_NOTF_GivenItem",_from getVariable ["realname",name _from],_val,_type];
+    // Wenn das Item erfolgreich empfangen wurde
+    if ([true, _itemName, (parseNumber _receivedValue)] call life_fnc_handleInv) then {
+        // Benachrichtigung über das erhaltene Item
+        private _itemType = M_CONFIG(getText, "VirtualItems", _itemName, "displayName");
+        hint format [localize "STR_NOTF_GivenItem", _giver getVariable ["realname", name _giver], _receivedValue, _itemType];
     } else {
-        [_from,_item,_val,_unit,false] remoteExecCall ["life_fnc_giveDiff",_from];
+        // Wenn nicht genug Platz im Inventar des Empfängers ist, die Differenz zurückgeben
+        [_giver, _itemName, _receivedValue, _receivingUnit, false] remoteExecCall ["life_fnc_giveDiff", _giver];
     };
 };

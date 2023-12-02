@@ -4,14 +4,16 @@
     Author: Bryan "Tonic" Boardwine
 
     Description:
-    Gets the items weight and returns it.
+    Gets the item's weight and returns it.
 */
 
 params [
     ["_item", "", [""]]
 ];
 
-_item = [_this,0,"",[""]] call BIS_fnc_param;
+// Sichergehen, dass _item nicht leer ist
+_item = [_this, 0, "", [""]] call BIS_fnc_param;
 if (_item isEqualTo "") exitWith {};
 
-M_CONFIG(getNumber,"VirtualItems",_item,"weight");
+// Das Gewicht des virtuellen Gegenstands abrufen
+M_CONFIG(getNumber, "VirtualItems", _item, "weight");

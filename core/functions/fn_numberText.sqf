@@ -3,26 +3,36 @@
     Author: Karel Moricky
 
     Description:
-    Convert a number into string (avoiding scientific notation)
+    Konvertiert eine Zahl in einen String (vermeidet wissenschaftliche Notation).
 
-    Parameter(s):
-    _this: NUMBER
+    Parameter:
+    _this: ZAHL
 
     Returns:
     STRING
 */
-private ["_number","_mod","_digots","_digitsCount","_modBase","_numberText"];
+private ["_number","_mod","_digits","_digitsCount","_modBase","_numberText"];
 
-_number = [_this,0,0,[0]] call bis_fnc_param;
-_mod = [_this,1,3,[0]] call bis_fnc_param;
+// Parameter überprüfen und initialisieren
+_number = [_this, 0, 0, [0]] call bis_fnc_param;
+_mod = [_this, 1, 3, [0]] call bis_fnc_param;
 
 _digits = _number call bis_fnc_numberDigits;
 _digitsCount = count _digits - 1;
 
 _modBase = _digitsCount % _mod;
 _numberText = "";
+
+// Durchlaufe die Ziffern der Zahl und erstelle den Text
 {
     _numberText = _numberText + str _x;
-    if ((_foreachindex - _modBase) % (_mod) isEqualTo 0 && !(_foreachindex isEqualTo _digitsCount)) then {_numberText = _numberText + ",";};
+    
+    // Füge ein Komma hinzu, wenn die Anzahl der Ziffern durch _mod teilbar ist
+    // und die aktuelle Ziffer nicht die letzte ist
+    if ((_foreachindex - _modBase) % (_mod) isEqualTo 0 && !(_foreachindex isEqualTo _digitsCount)) then {
+        _numberText = _numberText + ",";
+    };
 } forEach _digits;
-_numberText
+
+// Rückgabe des erstellten Texts
+_numberText;

@@ -9,33 +9,33 @@
 */
 
 params [
-    ["_b", objNull, [objNull]]
+    ["_doorObject", objNull, [objNull]] // Parameter umbenannt für bessere Lesbarkeit
 ];
 
-private _doors = getNumber (configFile >> "CfgVehicles" >> (typeOf _b) >> "NumberOfDoors");
-private _door = 0;
+// Anzahl der Türen abrufen
+private _doors = getNumber (configFile >> "CfgVehicles" >> (typeOf _doorObject) >> "NumberOfDoors");
+private _targetDoor = 0;
 
-//-- find the closest door
+//-- Finde die nächstgelegene Tür
 for "_i" from 1 to _doors do {
-    _selPos = _b selectionPosition format ["Door_%1_trigger",_i];
-    _worldSpace = _b modelToWorld _selPos;
-    if (player distance _worldSpace < 5) exitWith {_door = _i};
+    _selPos = _doorObject selectionPosition format ["Door_%1_trigger",_i];
+    _worldSpace = _doorObject modelToWorld _selPos;
+    if (player distance _worldSpace < 5) exitWith {_targetDoor = _i};
 };
 
-//-- if no door nearby, exitWith
-if (_door isEqualTo 0) exitWith {hint localize "STR_Cop_NotaDoor"};
+//-- Wenn keine Tür in der Nähe ist, zeige eine Meldung und beende das Skript
+if (_targetDoor isEqualTo 0) exitWith {hint localize "STR_Cop_NotaDoor"};
 
-//-- if the door is currently open, set the target to 0 (close)
+//-- Wenn die Tür bereits geöffnet ist, setze das Ziel auf 0 (schließen)
 private _target = [1, 0] select (
-    ((_b animationPhase format ["door_%1a_move", _door]) isEqualTo 1) || 
-    ((_b animationPhase format ["door_%1_rot", _door]) isEqualTo 1) || 
-    ((_b animationPhase format ["door_%1a_rot", _door]) isEqualTo 1) 
+    ((_doorObject animationPhase format ["door_%1a_move", _targetDoor]) isEqualTo 1) || 
+    ((_doorObject animationPhase format ["door_%1_rot", _targetDoor]) isEqualTo 1) || 
+    ((_doorObject animationPhase format ["door_%1a_rot", _targetDoor]) isEqualTo 1) 
 );
 
-//-- play the animation for all known sources.
+//-- Animation für alle bekannten Quellen abspielen
 {
-    _b animateSource [format [_x, _door], _target];
+    _doorObject animateSource [format [_x, _targetDoor], _target];
 } forEach ["Door_%1_source", "Door_%1_sound_source", "Door_%1_noSound_source"];
 
-
-closeDialog 0;
+closeDialog 0; // Dialog schließen

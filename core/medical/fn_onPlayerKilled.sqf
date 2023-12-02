@@ -1,64 +1,65 @@
 #include "..\..\script_macros.hpp"
 /*
-    File: fn_onPlayerKilled.sqf
-    Author: Bryan "Tonic" Boardwine
-    Description:
-    When the player dies collect various information about that player
-    and pull up the death dialog / camera functionality.
+    Datei: fn_onPlayerKilled.sqf
+    Autor: Bryan "Tonic" Boardwine
+    Beschreibung:
+    Wenn der Spieler stirbt, werden verschiedene Informationen über den Spieler gesammelt,
+    und das Todesdialog-/Kameraverhalten wird aufgerufen.
 */
 params [
-    ["_unit",objNull,[objNull]],
-    ["_killer",objNull,[objNull]]
+    ["_unit", objNull, [objNull]],
+    ["_killer", objNull, [objNull]]
 ];
 disableSerialization;
 
-if  !((vehicle _unit) isEqualTo _unit) then {
+// Fahrzeugfreigabe und Versetzung des Spielers aus dem Fahrzeug
+if !((vehicle _unit) isEqualTo _unit) then {
     UnAssignVehicle _unit;
     _unit action ["getOut", vehicle _unit];
     _unit setPosATL [(getPosATL _unit select 0) + 3, (getPosATL _unit select 1) + 1, 0];
 };
 
-//Set some vars
-_unit setVariable ["Revive",true,true];
-_unit setVariable ["name",profileName,true]; //Set my name so they can say my name.
-_unit setVariable ["restrained",false,true];
-_unit setVariable ["Escorting",false,true];
-_unit setVariable ["transporting",false,true];
-_unit setVariable ["playerSurrender",false,true];
-_unit setVariable ["steam64id",(getPlayerUID player),true]; //Set the UID.
+// Setze einige Variablen
+_unit setVariable ["Revive", true, true];
+_unit setVariable ["name", profileName, true]; // Setze meinen Namen, damit sie meinen Namen sagen können.
+_unit setVariable ["restrained", false, true];
+_unit setVariable ["Escorting", false, true];
+_unit setVariable ["transporting", false, true];
+_unit setVariable ["playerSurrender", false, true];
+_unit setVariable ["steam64id", (getPlayerUID player), true]; // Setze die UID.
 
-//close the esc dialog
+// Schließe das Escape-Dialogfeld
 if (dialog) then {
     closeDialog 0;
 };
 
-//Setup our camera view
-life_deathCamera  = "CAMERA" camCreate (getPosATL _unit);
+// Richte unsere Kameraperspektive ein
+life_deathCamera = "CAMERA" camCreate (getPosATL _unit);
 showCinemaBorder true;
-life_deathCamera cameraEffect ["Internal","Back"];
+life_deathCamera cameraEffect ["Internal", "Back"];
 createDialog "DeathScreen";
 life_deathCamera camSetTarget _unit;
-life_deathCamera camSetRelPos [0,3.5,4.5];
+life_deathCamera camSetRelPos [0, 3.5, 4.5];
 life_deathCamera camSetFOV .5;
-life_deathCamera camSetFocus [50,0];
+life_deathCamera camSetFocus [50, 0];
 life_deathCamera camCommit 0;
 
-(findDisplay 7300) displaySetEventHandler ["KeyDown","if ((_this select 1) isEqualTo 1) then {true}"]; //Block the ESC menu
+(findDisplay 7300) displaySetEventHandler ["KeyDown", "if ((_this select 1) isEqualTo 1) then {true}"]; //Blockiert das ESC-Menü
 
-//Create a thread for something?
+// Erstelle einen Thread für etwas?
 _unit spawn {
-    private ["_maxTime","_RespawnBtn","_Timer"];
+    private ["_maxTime", "_RespawnBtn", "_Timer"];
     disableSerialization;
     _RespawnBtn = ((findDisplay 7300) displayCtrl 7302);
     _Timer = ((findDisplay 7300) displayCtrl 7301);
-    if (LIFE_SETTINGS(getNumber,"respawn_timer") < 5) then {
+    if (LIFE_SETTINGS(getNumber, "respawn_timer") < 5) then {
         _maxTime = time + 5;
     } else {
-        _maxTime = time + LIFE_SETTINGS(getNumber,"respawn_timer");
+        _maxTime = time + LIFE_SETTINGS(getNumber, "respawn_timer");
     };
     _RespawnBtn ctrlEnable false;
     waitUntil {
-        _Timer ctrlSetText format [localize "STR_Medic_Respawn",[(_maxTime - time),"MM:SS"] call BIS_fnc_secondsToString];
+        _Timer ctrlSetText format [localize "STR_Medic_Respawn", [(_maxTime - time), "MM:SS"] call BIS_fnc_secondsToString];
         round(_maxTime - time) <= 0 || isNull _this
     };
     _RespawnBtn ctrlEnable true;
@@ -76,76 +77,64 @@ _unit spawn {
 
 [] spawn life_fnc_deathScreen;
 
-//Create a thread to follow with some what precision view of the corpse.
+// Erstelle einen Thread, um dem toten Körper mit relativ präziser Ansicht zu folgen.
 [_unit] spawn {
     private _unit = _this select 0;
     waitUntil {
         life_deathCamera camSetTarget _unit;
-        life_deathCamera camSetRelPos [0,3.5,4.5];
+        life_deathCamera camSetRelPos [0, 3.5, 4.5];
         life_deathCamera camCommit 0;
         speed _unit isEqualTo 0
     };
 };
 
-//Make the killer wanted
+// Mache den Killer gesucht
 if (!isNull _killer && {!(_killer isEqualTo _unit)} && {!(side _killer isEqualTo west)} && {alive _killer}) then {
-    if (vehicle _killer isKindOf "LandVehicle") then {
-        if (life_HC_isActive) then {
-            [getPlayerUID _killer,_killer getVariable ["realname",name _killer],"187V"] remoteExecCall ["HC_fnc_wantedAdd",HC_Life];
-        } else {
-            [getPlayerUID _killer,_killer getVariable ["realname",name _killer],"187V"] remoteExecCall ["life_fnc_wantedAdd",RSERV];
-        };
+    private _wantedType = (vehicle _killer isKindOf "LandVehicle") ? "187V" : "187";
+    private _wantedFunction = (life_HC_isActive) ? "HC_fnc_wantedAdd" : "life_fnc_wantedAdd";
 
-        //Get rid of this if you don't want automatic vehicle license removal.
-        if (!local _killer) then {
-            [2] remoteExecCall ["life_fnc_removeLicenses",_killer];
-        };
-    } else {
-        if (life_HC_isActive) then {
-            [getPlayerUID _killer,_killer getVariable ["realname",name _killer],"187"] remoteExecCall ["HC_fnc_wantedAdd",HC_Life];
-        } else {
-            [getPlayerUID _killer,_killer getVariable ["realname",name _killer],"187"] remoteExecCall ["life_fnc_wantedAdd",RSERV];
-        };
+    [_killer, _killer getVariable ["realname", name _killer], _wantedType] remoteExecCall [_wantedFunction, (life_HC_isActive) then {HC_Life} else {RSERV}];
 
-        if (!local _killer) then {
-            [3] remoteExecCall ["life_fnc_removeLicenses",_killer];
-        };
+    // Entferne die Fahrzeuglizenz automatisch, wenn gewünscht
+    if (!local _killer) then {
+        private _licenseType = (vehicle _killer isKindOf "LandVehicle") ? 2 : 3;
+        [_licenseType] remoteExecCall ["life_fnc_removeLicenses", _killer];
     };
 };
 
+// Speichere die Ausrüstung des Spielers vor dem Tod
 life_save_gear = getUnitLoadout player;
 
-if (LIFE_SETTINGS(getNumber,"drop_weapons_onDeath") isEqualTo 0) then {
+// Falls gewünscht, entferne die Waffen des Spielers nach dem Tod
+if (LIFE_SETTINGS(getNumber, "drop_weapons_onDeath") isEqualTo 0) then {
     _unit removeWeapon (primaryWeapon _unit);
     _unit removeWeapon (handgunWeapon _unit);
     _unit removeWeapon (secondaryWeapon _unit);
 };
 
-//Killed by cop stuff...
+// Aktionen bei Tod durch einen Polizisten
 if (side _killer isEqualTo west && !(playerSide isEqualTo west)) then {
     life_copRecieve = _killer;
-    //Did I rob the federal reserve?
+    // Habe ich das Federal Reserve überfallen?
     if (!life_use_atm && {CASH > 0}) then {
-        [format [localize "STR_Cop_RobberDead",[CASH] call life_fnc_numberText]] remoteExecCall ["life_fnc_broadcast",RCLIENT];
-        CASH = 0;
+        [format [localize "STR_Cop_RobberDead", [CASH] call life_fnc_numberText]] remoteExecCall ["life_fnc_broadcast", RCLIENT];
     };
 };
 
+// Falls gewünscht, entferne den Fahndungsstatus nach dem Tod
 if (!isNull _killer && {!(_killer isEqualTo _unit)}) then {
     life_removeWanted = true;
 };
 
-[_unit] call life_fnc_dropItems;
+// Lasse Gegenstände fallen
+//[_unit] call life_fnc_dropItems;
 
+// Zurücksetzen von Variablen und HUD-Updates
 life_action_inUse = false;
-life_hunger = 100;
-life_thirst = 100;
-life_carryWeight = 0;
-CASH = 0;
 life_is_alive = false;
 
-[] call life_fnc_hudUpdate; //Get our HUD updated.
-[player,life_settings_enableSidechannel,playerSide] remoteExecCall ["TON_fnc_manageSC",RSERV];
+[] call life_fnc_hudUpdate; // Aktualisiere das HUD.
+[player, life_settings_enableSidechannel, playerSide] remoteExecCall ["TON_fnc_manageSC", RSERV];
 
 [0] call SOCK_fnc_updatePartial;
 [3] call SOCK_fnc_updatePartial;

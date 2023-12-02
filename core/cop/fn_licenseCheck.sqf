@@ -8,24 +8,25 @@
 */
 
 params [
-    ["_cop",objNull,[objNull]]
+    ["_cop", objNull, [objNull]]
 ];
 
-if (isNull _cop) exitWith {}; //Bad entry
+if (isNull _cop) exitWith { /* Meldung, wenn ungültiger Eintrag */ }; 
 
-private _licenses = "";
+private _licenses = ""; // String zur Speicherung der Lizenzen
 
-//Config entries for licenses that are civilian
+// Config-Einträge für Lizenzen, die Zivilisten gehören
 private _licensesConfigs = "getText(_x >> 'side') isEqualTo 'civ'" configClasses (missionConfigFile >> "Licenses");
 
 {
+    // Überprüfen, ob die Lizenz für Zivilisten gültig ist
     if (LICENSE_VALUE(configName _x, "civ")) then {
-        _licenses = _licenses + getText(_x >> "displayName") + "<br/>";
+        _licenses = _licenses + getText(_x >> "displayName") + "<br/>"; // Lizenz zum String hinzufügen
     };
     true
 } count _licensesConfigs;
 
 if (_licenses isEqualTo "") then {
-    _licenses = localize "STR_Cop_NoLicensesFound";
+    _licenses = localize "STR_Cop_NoLicensesFound"; // Meldung, wenn keine Lizenzen gefunden wurden
 };
-[profileName,_licenses] remoteExecCall ["life_fnc_licensesRead",_cop];
+[profileName, _licenses] remoteExecCall ["life_fnc_licensesRead", _cop]; // Lizenzinformationen an den Cop senden
