@@ -1,13 +1,11 @@
 /*
-        File : fn_setPlayTime.sqf
-        Author : NiiRoZz
+    File: fn_setPlayTime.sqf
+    Author: NiiRoZz
 
-        Description :
-        Sets gathered time of player
-
-        GATHERED - Loaded from DB and NOT changed
-        JOIN - Time, the player joined - the newly gathered playtime will be calculated using difference
-
+    Description:
+    Sets gathered time of a player.
+    GATHERED - Loaded from DB and NOT changed
+    JOIN - Time when the player joined - the newly gathered playtime will be calculated using the difference
 */
 
 private ["_uid", "_time_gathered"];
@@ -15,13 +13,14 @@ private ["_uid", "_time_gathered"];
 _uid = _this select 0;
 _time_gathered = ((_this select 1) * 60);
 
-//create value using get
+// Create value using get
 [_uid] call TON_fnc_getPlayTime;
 
-//set value no 1
+// Set value at index 1
 {
-    if ((_x select 0) isEqualTo _uid) exitWith {
+    if ((_x select 0) isEqualTo _uid) then {
         _x set [1, _time_gathered];
         _x set [2, time];
+        exitWith {};
     };
 } forEach TON_fnc_playtime_values;

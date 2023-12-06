@@ -23,6 +23,9 @@ private _name = name _unit;
 private _side = side _unit;
 _unit = owner _unit;
 
+if (isNull _unit) exitWith {};
+
+// Überprüfe die Parameter und beende die Funktion, wenn sie ungültig sind
 if (_vid isEqualTo -1 || {_pid isEqualTo ""}) exitWith {};
 if (_vid in serv_sv_use) exitWith {};
 serv_sv_use pushBack _vid;
@@ -48,6 +51,7 @@ private _vInfo = _queryResult;
 if (isNil "_vInfo") exitWith {serv_sv_use deleteAt _servIndex;};
 if (_vInfo isEqualTo []) exitWith {serv_sv_use deleteAt _servIndex;};
 
+// Überprüfe, ob das Fahrzeug bereits in Benutzung oder zerstört ist
 if ((_vInfo select 5) isEqualTo 0) exitWith {
     serv_sv_use deleteAt _servIndex;
     [1,"STR_Garage_SQLError_Destroyed",true,[_vInfo select 2]] remoteExecCall ["life_fnc_broadcast",_unit];
@@ -65,21 +69,22 @@ if !(_sp isEqualType "") then {
     _nearVehicles = [];
 };
 
+// Überprüfe, ob ein Fahrzeug in der Nähe des Spawn-Punkts vorhanden ist
 if !(_nearVehicles isEqualTo []) exitWith {
     serv_sv_use deleteAt _servIndex;
     [_price,_unit_return] remoteExecCall ["life_fnc_garageRefund",_unit];
     [1,"STR_Garage_SpawnPointError",true] remoteExecCall ["life_fnc_broadcast",_unit];
 };
 
+// Aktualisiere den Fahrzeugzustand in der Datenbank
 _query = format ["updateVehicle:%1:%2", _pid, _vid];
+[_query, 1] call DB_fnc_asyncCall;
 
 private _trunk = _vInfo select 9;
 private _gear = _vInfo select 10;
 private _damage = _vInfo select 12;
 private _wasIllegal = _vInfo select 13;
 _wasIllegal = _wasIllegal isEqualTo 1;
-
-[_query, 1] call DB_fnc_asyncCall;
 
 private "_vehicle";
 if (_sp isEqualType "") then {
@@ -188,5 +193,8 @@ if ((_vInfo select 1) isEqualTo "med" && (_vInfo select 2) isEqualTo "C_Offroad_
     [_vehicle,"med_offroad",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
 
+// Sendet eine Broadcast-Nachricht über den Spawn des Fahrzeugs
 [1,_spawntext] remoteExecCall ["life_fnc_broadcast",_unit];
+
+// Lösche das Fahrzeug aus der Liste der verwendeten Fahrzeuge
 serv_sv_use deleteAt _servIndex;

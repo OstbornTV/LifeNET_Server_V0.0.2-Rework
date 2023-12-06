@@ -8,26 +8,38 @@
 params [
     ["_spikeStrip", objNull, [objNull]]
 ];
+
 if (isNull _spikeStrip) exitWith {};
 
+// Füge den Nagelstreifen zum serverseitigen Array hinzu
 server_spikes pushBack _spikeStrip;
 
-if (count server_spikes isEqualTo 1) then { //start monitoring spikestrips
-    private _minSpikeSpeed = LIFE_SETTINGS(getNumber,"minimumSpikeSpeed");
+// Wenn die Anzahl der Nagelstreifen gleich 1 ist, starte das Überwachen der Nagelstreifen
+if (count server_spikes isEqualTo 1) then {
+    private _minSpikeSpeed = LIFE_SETTINGS(getNumber, "minimumSpikeSpeed");
 
     for "_i" from 0 to 1 step 0 do {
+        // Beende die Schleife, wenn das serverseitige Array leer ist
         if (server_spikes isEqualTo []) exitWith {};
 
         {
-            (nearestObjects [_x,["Car"],5]) params [["_nearVeh", objNull]];
+            // Überprüfe jedes Fahrzeug in der Nähe der Nagelstreifen
+            (nearestObjects [_x, ["Car"], 5]) params [["_nearVeh", objNull]];
+
+            // Wenn das Fahrzeug lebendig ist und die Geschwindigkeit über dem Mindestwert liegt
             if (alive _nearVeh && {abs (speed _nearVeh) > _minSpikeSpeed}) then {
-                [_nearVeh] remoteExecCall ["life_fnc_spikeStripEffect",_nearVeh];
+                // Führe die Funktion "life_fnc_spikeStripEffect" auf dem Fahrzeug aus
+                [_nearVeh] remoteExecCall ["life_fnc_spikeStripEffect", _nearVeh];
+
+                // Lösche den Nagelstreifen
                 deleteVehicle _x;
             };
         } forEach server_spikes;
 
+        // Entferne Null-Objekte aus dem serverseitigen Array
         server_spikes = server_spikes - [objNull];
 
+        // Kurze Pause
         uiSleep 1e-6;
     };
 };

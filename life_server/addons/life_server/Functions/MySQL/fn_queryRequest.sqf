@@ -31,62 +31,62 @@ private _query = switch (_side) do {
 };
 
 private _tickTime = diag_tickTime;
-private _queryResult = [_query,2] call DB_fnc_asyncCall;
+private _queryResult = [_query, 2] call DB_fnc_asyncCall;
 
 if (EXTDB_SETTING(getNumber, "DebugMode") isEqualTo 1) then {
     diag_log "------------- Client Query Request -------------";
-    diag_log format ["QUERY: %1",_query];
-    diag_log format ["Time to complete: %1 (in seconds)",(diag_tickTime - _tickTime)];
-    diag_log format ["Result: %1",_queryResult];
+    diag_log format ["QUERY: %1", _query];
+    diag_log format ["Time to complete: %1 (in seconds)", (diag_tickTime - _tickTime)];
+    diag_log format ["Result: %1", _queryResult];
     diag_log "------------------------------------------------";
 };
 
 if (_queryResult isEqualType "" || _queryResult isEqualTo []) exitWith {
-    [] remoteExecCall ["SOCK_fnc_insertPlayerInfo",_ownerID];
+    [] remoteExecCall ["SOCK_fnc_insertPlayerInfo", _ownerID];
 };
 
 private _licenses = (_queryResult select 6);
 
-for "_i" from 0 to (count _licenses) -1 do {
-    (_licenses select _i) params ["_license", "_owned"];
-    _licenses set[_i, [_license, [false, true] select _owned]];
-};
+{
+    params ["_license", "_owned"];
+    _license, [false, true] select _owned
+} forEach _licenses;
 
 private "_playTimes";
 
 switch (_side) do {
-  case civilian: {
-      _queryResult set[7, [false, true] select (_queryResult select 7)];
-      _queryResult set[10, [false, true] select (_queryResult select 10)];
+    case civilian: {
+        _queryResult set[7, [false, true] select (_queryResult select 7)];
+        _queryResult set[10, [false, true] select (_queryResult select 10)];
 
-      _playTimes = _queryResult select 12;
-      [_uid, _playTimes select 2] call TON_fnc_setPlayTime;
+        _playTimes = _queryResult select 12;
+        [_uid, _playTimes select 2] call TON_fnc_setPlayTime;
 
-      /* Make sure nothing else is added under here */
-      _houseData = _uid spawn TON_fnc_fetchPlayerHouses;
-      waitUntil {scriptDone _houseData};
-      _queryResult pushBack (missionNamespace getVariable [format ["houses_%1",_uid],[]]);
-      _gangData = _uid spawn TON_fnc_queryPlayerGang;
-      waitUntil {scriptDone _gangData};
-      _queryResult pushBack (missionNamespace getVariable [format ["gang_%1",_uid],[]]);
-  };
+        /* Make sure nothing else is added under here */
+        _houseData = _uid spawn TON_fnc_fetchPlayerHouses;
+        waitUntil {scriptDone _houseData};
+        _queryResult pushBack (missionNamespace getVariable [format ["houses_%1",_uid],[]]);
+        _gangData = _uid spawn TON_fnc_queryPlayerGang;
+        waitUntil {scriptDone _gangData};
+        _queryResult pushBack (missionNamespace getVariable [format ["gang_%1",_uid],[]]);
+    };
 
-  case west: {
-    _queryResult set[9, [false, true] select (_queryResult select 9)];
-    _playTimes = _queryResult select 11;
-    [_uid, _playTimes select 0] call TON_fnc_setPlayTime;
-  };
+    case west: {
+        _queryResult set[9, [false, true] select (_queryResult select 9)];
+        _playTimes = _queryResult select 11;
+        [_uid, _playTimes select 0] call TON_fnc_setPlayTime;
+    };
 
-  case independent: {
-    _playTimes = _queryResult select 10;
-    [_uid, _playTimes select 1] call TON_fnc_setPlayTime;
-  };
+    case independent: {
+        _playTimes = _queryResult select 10;
+        [_uid, _playTimes select 1] call TON_fnc_setPlayTime;
+    };
 };
 
 _index = TON_fnc_playtime_values_request find [_uid, _playTimes];
 
 if !(_index isEqualTo -1) then {
-    TON_fnc_playtime_values_request set[_index,-1];
+    TON_fnc_playtime_values_request set[_index, -1];
     TON_fnc_playtime_values_request = TON_fnc_playtime_values_request - [-1];
     TON_fnc_playtime_values_request pushBack [_uid, _playTimes];
 } else {
@@ -95,6 +95,6 @@ if !(_index isEqualTo -1) then {
 
 publicVariable "TON_fnc_playtime_values_request";
 
-_keyArr = missionNamespace getVariable [format ["%1_KEYS_%2",_uid,_side], []];
+_keyArr = missionNamespace getVariable [format ["%1_KEYS_%2", _uid, _side], []];
 _queryResult pushBack _keyArr;
 _queryResult remoteExec ["SOCK_fnc_requestReceived", _ownerID];

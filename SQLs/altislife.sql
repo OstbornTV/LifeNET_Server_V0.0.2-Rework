@@ -15,8 +15,8 @@ SET time_zone = "+00:00";
 -- Creates database `altislife` unless it already exists and uses `altislife`
 -- Default Schema
 --
-CREATE DATABASE IF NOT EXISTS `altislife` DEFAULT CHARACTER SET utf8mb4;
-USE `altislife`;
+CREATE DATABASE IF NOT EXISTS `LifeNET_life` DEFAULT CHARACTER SET utf8mb4;
+USE `LifeNET_life`;
 
 --
 -- Drop procedures to ensure no conflicts
@@ -240,8 +240,8 @@ CREATE TABLE IF NOT EXISTS `wanted` (
 -- Reloads the privileges from the grant tables in the MySQL system database.
 --
 
-CREATE USER IF NOT EXISTS `arma3`@`localhost` IDENTIFIED BY 'AltisLife';
-GRANT SELECT, UPDATE, INSERT, EXECUTE ON `altislife`.* TO 'arma3'@'localhost';
+CREATE USER IF NOT EXISTS `arma3`@`localhost` IDENTIFIED BY 'LifeNET_life';
+GRANT SELECT, UPDATE, INSERT, EXECUTE ON `LifeNET_life`.* TO 'arma3'@'localhost';
 FLUSH PRIVILEGES;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
@@ -282,10 +282,6 @@ CREATE TABLE IF NOT EXISTS `locker` (
     `east_level` int(7) NOT NULL DEFAULT '0',
     PRIMARY KEY (`playerid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
---
--- Change `altislife` to your database name
 
 CREATE TABLE IF NOT EXISTS `bugTracker` (
   `id` int(6) NOT NULL AUTO_INCREMENT,

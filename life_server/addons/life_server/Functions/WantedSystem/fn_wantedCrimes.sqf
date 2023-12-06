@@ -12,25 +12,33 @@
 disableSerialization;
 
 params [
-    ["_ret",objNull,[objNull]],
-    ["_criminal",[],[[]]]
+    ["_ret", objNull, [objNull]],
+    ["_criminal", [], [[]]]
 ];
 
-private _query = format ["SELECT wantedCrimes, wantedBounty FROM wanted WHERE active='1' AND wantedID='%1'",_criminal select 0];
-private _queryResult = [_query,2] call DB_fnc_asyncCall;
+// Datenbankabfrage, um Verbrechen und Belohnung abzurufen
+private _query = format ["SELECT wantedCrimes, wantedBounty FROM wanted WHERE active='1' AND wantedID='%1'", _criminal select 0];
+private _queryResult = [_query, 2] call DB_fnc_asyncCall;
 
+// Besitzer des Rückgabewerts
 _ret = owner _ret;
 
-private _type = [_queryResult select 0] call DB_fnc_mresToArray;
-if (_type isEqualType "") then {_type = call compile format ["%1", _type];};
-
+// Extrahieren der Verbrechen und Umwandeln in ein Array
 private _crimesArr = [];
+private _type = [_queryResult select 0] call DB_fnc_mresToArray;
+if (_type isEqualType "") then {
+    _type = call compile format ["%1", _type];
+};
+
+// Erstellen eines Arrays mit lokalisierten Verbrechen
 {
     private _str = format ["STR_Crime_%1", _x];
     _crimesArr pushBack _str;
     false
 } count _type;
 
-_queryResult set[0,_crimesArr];
+// Ersetzen des Verbrechen-Arrays in der Abfrageergebnisliste
+_queryResult set [0, _crimesArr];
 
-[_queryResult] remoteExec ["life_fnc_wantedInfo",_ret];
+// Remote-Ausführung der Funktion life_fnc_wantedInfo mit aktualisierten Daten
+[_queryResult] remoteExec ["life_fnc_wantedInfo", _ret];

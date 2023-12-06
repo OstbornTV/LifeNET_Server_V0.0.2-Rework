@@ -14,16 +14,16 @@ params [
     ["_unit", objNull, [objNull]]
 ];
 
-//Error checks
+// Error checks
 if (_pid isEqualTo "" || {_side isEqualTo sideUnknown} || {_type isEqualTo ""} || {isNull _unit}) exitWith {
     if (!isNull _unit) then {
-        [[]] remoteExec ["life_fnc_impoundMenu",(owner _unit)];
+        [[]] remoteExec ["life_fnc_impoundMenu", (owner _unit)];
     };
 };
 
 _unit = owner _unit;
 _side = switch (_side) do {
-    case west:{"cop"};
+    case west: {"cop"};
     case civilian: {"civ"};
     case independent: {"med"};
     default {"Error"};
@@ -35,11 +35,10 @@ if (_side isEqualTo "Error") exitWith {
 
 private _query = format ["selectVehicles:%1:%2:%3", _pid, _side, _type];
 
-
 private _tickTime = diag_tickTime;
 private _queryResult = [_query, 2, true] call DB_fnc_asyncCall;
 
-if (EXTDB_SETTING(getNumber,"DebugMode") isEqualTo 1) then {
+if (EXTDB_SETTING(getNumber, "DebugMode") isEqualTo 1) then {
     diag_log "------------- Client Query Request -------------";
     diag_log format ["QUERY: %1", _query];
     diag_log format ["Time to complete: %1 (in seconds)", (diag_tickTime - _tickTime)];

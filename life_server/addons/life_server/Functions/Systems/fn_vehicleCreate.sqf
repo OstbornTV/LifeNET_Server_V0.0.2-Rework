@@ -13,11 +13,12 @@ params [
     ["_color", -1, [0]]
 ];
 
-//Error checks
+// Fehlerüberprüfungen
 if (_uid isEqualTo "" || {_side isEqualTo sideUnknown} || {isNull _vehicle}) exitWith {};
 if (!alive _vehicle) exitWith {};
 
-if !(isClass (missionConfigFile >> "LifeCfgVehicles" >> _className)) exitWith {}; // No-Inject Batiment hack script
+// Sicherheitsüberprüfung, um das Einschleusen (No-Inject) zu verhindern
+if !(isClass (missionConfigFile >> "LifeCfgVehicles" >> _className)) exitWith {"No-Inject Batiment hack script"};
 
 private _className = typeOf _vehicle;
 private _type = switch (true) do {
@@ -34,6 +35,9 @@ _side = switch (_side) do {
 };
 
 private _plate = round(random(1000000));
-[_uid, _side, _type, _classname, _color, _plate] call DB_fnc_insertVehicle;
 
+// Rufe die Funktion auf, um das Fahrzeug in die Datenbank einzufügen
+[_uid, _side, _type, _className, _color, _plate] call DB_fnc_insertVehicle;
+
+// Setze die Informationen zur Datenbank im Fahrzeugvariablen
 _vehicle setVariable ["dbInfo", [_uid, _plate], true];

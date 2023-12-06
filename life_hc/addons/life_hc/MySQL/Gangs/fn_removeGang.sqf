@@ -6,20 +6,30 @@
     This file is for Nanou's HeadlessClient.
 
     Description:
-    Blah
+    Disbands a gang and removes it from the database.
 */
 params [
     ["_group", grpNull, [grpNull]]
 ];
 
-if (isNull _group) exitWith {};
+// Überprüfen, ob die Gruppe vorhanden ist
+if (isNull _group) exitWith {"Error: Invalid group."};
 
-private _groupID = _group getVariable ["gang_id",-1];
-if (_groupID isEqualTo -1) exitWith {};
+// Gruppen-ID aus den Gruppenvariablen abrufen
+private _groupID = _group getVariable ["gang_id", -1];
 
-_group setVariable ["gang_owner",nil,true];
+// Überprüfen, ob die Gruppen-ID gültig ist
+if (_groupID isEqualTo -1) exitWith {"Error: Invalid gang ID."};
+
+// Gang-Besitzer entfernen und Gang aus der Datenbank löschen (HeadlessClient)
+_group setVariable ["gang_owner", nil, true];
 [format ["deleteGang:%1", _groupID], 1] call HC_fnc_asyncCall;
 
-[_group] remoteExecCall ["life_fnc_gangDisbanded",(units _group)];
+// Gang auf dem Server disbanden und Benachrichtigung an die Mitglieder senden
+[_group] remoteExecCall ["life_fnc_gangDisbanded", (units _group)];
+
+// Kurze Verzögerung, um sicherzustellen, dass die Benachrichtigung gesendet wird
 uiSleep 5;
+
+// Gruppe auf dem Server löschen
 deleteGroup _group;

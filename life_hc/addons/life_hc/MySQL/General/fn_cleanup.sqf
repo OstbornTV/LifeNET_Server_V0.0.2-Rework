@@ -4,11 +4,14 @@
     Author: Bryan "Tonic" Boardwine
 
     Description:
-    Server-side cleanup script on vehicles, dealers and fed reserve.
+    Server-side cleanup script on vehicles, dealers, and fed reserve.
 */
-private _saveFuel = LIFE_SETTINGS(getNumber,"save_vehicle_fuel") isEqualTo 1;
-private _minUnitDistance = LIFE_SETTINGS(getNumber,"vehicles_despawn_max_distance");
 
+// Einstellungen
+private _saveFuel = LIFE_SETTINGS(getNumber, "save_vehicle_fuel") isEqualTo 1;
+private _minUnitDistance = LIFE_SETTINGS(getNumber, "vehicles_despawn_max_distance");
+
+// Funktion für die Aktualisierung des Händlerinventars
 private _fnc_fedDealerUpdate = {
     {
         private _dealer = missionNamespace getVariable [_x, objNull];
@@ -17,23 +20,24 @@ private _fnc_fedDealerUpdate = {
         };
     } forEach ["Dealer_1", "Dealer_2", "Dealer_3"];
 
-        private _funds = fed_bank getVariable ["safe", 0];
-    fed_bank setVariable ["safe", round(_funds+((count playableUnits)/2)), true];
+    private _funds = fed_bank getVariable ["safe", 0];
+    fed_bank setVariable ["safe", round(_funds + (count playableUnits) / 2), true];
 };
 
+// Funktion zum Bereinigen von Fahrzeugen
 private _fnc_cleanVehicles = {
     {
         private _vehicleClass = getText(configFile >> "CfgVehicles" >> (typeOf _x) >> "vehicleClass");
-        private _protect = _x getVariable ["NPC",false];
+        private _protect = _x getVariable ["NPC", false];
 
-        if ((_vehicleClass in ["Car","Air","Ship","Armored","Submarine"]) && {!_protect}) then {
+        if ((_vehicleClass in ["Car", "Air", "Ship", "Armored", "Submarine"]) && {!_protect}) then {
             private _noUnitsNear = (nearestObjects [_x, ["CAManBase"], _minUnitDistance]) findIf {isPlayer _x && {alive _x}} isEqualTo -1;
 
-                                if (crew _x isEqualTo [] && {_noUnitsNear}) then {
+            if (crew _x isEqualTo [] && {_noUnitsNear}) then {
                 private _fuel = if (_saveFuel) then {fuel _x} else {1};
                 private _dbInfo = _x getVariable "dbInfo";
 
-                 deleteVehicle _x;
+                deleteVehicle _x;
 
                 if (isNil "_dbInfo") exitWith {};
 
@@ -46,7 +50,6 @@ private _fnc_cleanVehicles = {
 
                 private _query = format ["cleanupVehicle:%1:%2:%3", _fuel, _uid, _plate];
                 [_query, 1] call HC_fnc_asyncCall;
-
             };
         };
     } forEach vehicles;
@@ -59,7 +62,7 @@ private _fnc_cleanVehicles = {
     } count (allMissionObjects "Thing");
 };
 
-//Array format: [parameters,function,delayTime]
+// Array-Format: [Parameter, Funktion, Verzögerungszeit]
 private _routines = [
     [[], _fnc_fedDealerUpdate, 1800],
     [[], _fnc_cleanVehicles, 3600]

@@ -1,22 +1,14 @@
 // ######################################
 // # Description von LifeNET [LNET] #
 // ######################################
-// https://community.bistudio.com/wiki/Description.ext
 
 disableChannels[] = {{0,true,true},{1,true,true},{2,true,true}};    // Disabled text and voice for global, side, and command channels. Syntax: disableChannels[] = {{channelID<number>, disableChat<bool>, disableVoice<bool>}};
+
 overviewText = "Eine Roleplay gescriptestes spielerlebnis vom LifeNET-Team";    // Text to be displayed below the overviewPicture on the mission selection screen when the mission is available to play.
+
 unsafeCVL = 1; // Allows createVehicleLocal to be executed in Multiplayer
 
 #include "CfgRemoteExec.hpp"
-
-#include "dialog\masterhandler.hpp"
-
-#include "config\config_master.hpp"
-
-#include "cxp\cxp_cfgs.cpp"
-
-#include "cxp\cxp_dialogs.cpp"
-
 
 allowFunctionsLog = 1;
 cba_settings_hasSettingsFile = 1;
@@ -25,7 +17,7 @@ class Header
 {
 	gameType = RPG;
 	minPlayers = 1;
-	maxPlayers = 120;
+	maxPlayers = 100;
 };
 
 // Infos
@@ -57,202 +49,29 @@ showSquadRadar = 0;
 saving = 0;
 
 class CfgServer {
-    DatabaseName = "altislife"; //Config name that'll be grep in the extdb-conf.ini. Default: [altislife]
+    DatabaseName = "LifeNET_Life"; //Config name that'll be grep in the extdb-conf.ini. Default: [altislife]
     DebugMode = 1; //Enable many server/hc debugging logs. Default: 0 (1 = Enabled / 0 = Disabled)
-    HeadlessSupport = 1; //Enable/Disable Headless client support. Default: 1 (1 = Enabled / 0 = Disabled)
-    /*
-    Enabled: When HeadlessSupport is set to 1 (enabled), the server will run without fault when no Headless Client is connected. However, it will support the Headless Client if you choose to connect one.
-    Disabled: If HeadlessSupport is set to 0 (disabled), the connection of a Headless Client will make no difference. This option will increase server performance a TINY but negligible amount.
-    */
+    HeadlessSupport = 0; //Enable/Disable Headless client support. Default: 1 (1 = Enabled / 0 = Disabled)
 };
 
+#include "dialog\masterhandler.hpp"
+#include "config\config_master.hpp"
+#include "cxp\cxp_cfgs.cpp"
+#include "cxp\cxp_dialogs.cpp"
 
 class RscTitles {
   #include "dialog\progress.hpp"
-
   #include "dialog\hud_nameTags.hpp"
-
   #include "dialog\hud_stats.hpp"
-
 };
 
 class CfgFunctions {
     #include "Functions.hpp"
-
 	#include "cation\cation_functions.cpp"
-
-    #include "cxp\cxp_functions.cpp"
-    
+    #include "cxp\cxp_functions.cpp"  
 };
 
-class CfgSounds {
-    sounds[] = {};
-
-    class sirenLong 
-    {
-        name = "siren_Long";
-        sound[] = {"\LifeNETSounds\sounds\siren_Long.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class Siren_medic {
-        name = "Siren_medic";
-        sound[] = {"\LifeNETSounds\sounds\siren_medic.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class tazerSound {
-        name = "tazerSound";
-        sound[] = {"\LifeNETSounds\sounds\tazer.ogg", 0.5, 1};
-        titles[] = {};
-    };
-
-    class flashbang {
-        name = "flashbang";
-        sound[] = {"\LifeNETSounds\sounds\flashbang.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class mining {
-        name = "mining";
-        sound[] = {"\LifeNETSounds\sounds\mining.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class harvest {
-        name = "harvest";
-        sound[] = {"\LifeNETSounds\sounds\harvest.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class lockCarSound {
-        name = "lockCarSound";
-        sound[] = {"\LifeNETSounds\sounds\carLock.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class unlockCarSound {
-        name = "unlockCarSound";
-        sound[] = {"\LifeNETSounds\sounds\carUnlock.ogg", 0.75, 1};
-        titles[] = {};
-    };
-
-    class CarAlarm {
-        name = "CarAlarm";
-        sound[] = {"\LifeNETSounds\sounds\alarmanlage.ogg", 1.0, 1};
-        titles[] = {};
-    };
-
-    class bong {
-        name = "bong";
-        sound[] = {"\LifeNETSounds\sounds\bong.ogg", 2.0, 1};
-        titles[] = {};
-    };
-    
-    class panik {
-        name = "panik";
-        sound[] = {"\LifeNETSounds\sounds\panik.oog", 2.0, 1};
-        titles[] = {};
-    };
-
-    class achtungpolizeifahrzeug {
-        name = "achtungpolizeifahrzeug";
-        sound[] = {"\LifeNETSounds\sounds\achtungpolizeifahrzeug.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class achtungpolizeiwaffen {
-        name = "achtungpolizeiwaffen";
-        sound[] = {"\LifeNETSounds\sounds\achtungpolizeiwaffen.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class adminhorn {
-        name = "adminhorn";
-        sound[] = {"\LifeNETSounds\sounds\adminhorn.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class c1up {
-        name = "c1up";
-        sound[] = {"\LifeNETSounds\sounds\c1up.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class chopwood {
-        name = "chopwood";
-        sound[] = {"\LifeNETSounds\sounds\chopwood.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class empac {
-        name = "empac";
-        sound[] = {"\LifeNETSounds\sounds\empac.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class empwarn {
-        name = "empwarn";
-        sound[] = {"\LifeNETSounds\sounds\empwarn.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class horn {
-        name = "horn";
-        sound[] = {"\LifeNETSounds\sounds\horn.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class robbery {
-        name = "robbery";
-        sound[] = {"\LifeNETSounds\sounds\robbery.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class robbery2 {
-        name = "robbery2";
-        sound[] = {"\LifeNETSounds\sounds\robbery.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class smsadmin {
-        name = "smsadmin";
-        sound[] = {"\LifeNETSounds\sounds\smsadmin.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class smsciv {
-        name = "smsciv";
-        sound[] = {"\LifeNETSounds\sounds\smsciv.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class smsmedic {
-        name = "smsmedic";
-        sound[] = {"\LifeNETSounds\sounds\smsmedic.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class wasted {
-        name = "wasted";
-        sound[] = {"\LifeNETSounds\sounds\wasted.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class yelp {
-        name = "yelp";
-        sound[] = {"\LifeNETSounds\sounds\yelp.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class achievement {
-        name = "achievement";
-        sound[] = {"\LifeNETSounds\sounds\achievement.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    
-};
+#include "config\Config_Sounds.hpp"
 
 class CfgDebriefing 
 {
@@ -284,132 +103,7 @@ class CfgDebriefing
 
 class CfgNotifications {
     #include "cxp\cxp_notifications.cpp"
-    
-    class MedicalRequestEmerg 
-    {
-        title = "$STR_MedicalRequestEmerg_Title";
-        iconPicture = "\LifeNET_Skins\request\rdrequest.paa";
-        description = "%1";
-        duration = 5;
-        priority = 7;
-    };
-
-    class DeliveryAssigned 
-    {
-        title = "$STR_DeliveryAssigned_Title";
-        iconPicture = "\A3\ui_f\data\map\mapcontrol\taskIcon_ca.paa";
-        description = "%1";
-        duration = 10;
-        priority = 7;
-    };
-
-    class DeliveryFailed 
-    {
-        title = "$STR_DeliveryFailed_Title";
-        iconPicture = "\A3\ui_f\data\map\mapcontrol\taskiconfailed_ca.paa";
-        description = "%1";
-        duration = 7;
-        priority = 7;
-    };
-
-    class DeliverySucceeded 
-    {
-        title = "$STR_DeliverySucceeded_Title";
-        iconPicture = "\A3\ui_f\data\map\mapcontrol\taskIcondone_ca.paa";
-        description = "%1";
-        duration = 6;
-        priority = 6;
-    };
-
-    class TextMessage 
-    {
-        title = "$STR_TextMessage_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messageNew.paa";
-        description = "%1";
-        duration = 10;
-        priority = 6;
-    };
-
-    class PoliceDispatch 
-    {
-        title = "$STR_PoliceDispatch_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messagePolice.paa";
-        description = "%1";
-        duration = 10;
-        priority = 6;
-    };
-
-    class AdminDispatch 
-    {
-        title = "$STR_AdminDispatch_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messageAdmin.paa";
-        description = "%1";
-        duration = 10;
-        priority = 6;
-    };
-
-    class AdminMessage 
-    {
-        title = "$STR_AdminMessage_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messageAdmin.paa";
-        description = "%1";
-        duration = 10;
-        priority = 5;
-    };
-};
-
-class CfgMusic
-{
-    tracks[]={};
-    class intro 
-    {
-        name = "intro";
-        sound[] = {"\LifeNETSounds\sounds\intro.ogg", -1, 1.0};
-        titles[] = {};
-    };
-
-    class abort
-    {
-        name = "abort";
-        sound[] = {"\LifeNETSounds\sounds\abort.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class icanfly {
-        name = "icanfly";
-        sound[] = {"\LifeNETSounds\sounds\icanfly.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class bierholen {
-        name = "bierholen";
-        sound[] = {"\LifeNETSounds\sounds\bierholen.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class fpolice {
-        name = "fpolice";
-        sound[] = {"\LifeNETSounds\sounds\fpolice.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class turndown {
-        name = "turndown";
-        sound[] = {"\LifeNETSounds\soounds\turndown.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class weed {
-        name = "weed";
-        sound[] = {"\LifeNETSounds\sounds\weed.ogg", 2.0, 1};
-        titles[] = {};
-    };
-
-    class woopwoop {
-        name = "woopwoop";
-        sound[] = {"\LifeNETSounds\sounds\woopwoop.ogg", 2.0, 1};
-        titles[] = {};
-    };
+    #include "config\Config_Notifications.hpp"
 };
 
 #include "cation\cation_master.cpp"

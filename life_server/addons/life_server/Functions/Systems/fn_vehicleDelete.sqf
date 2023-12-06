@@ -15,7 +15,11 @@ params [
     ["_type", "", [""]]
 ];
 
+// Fehlerüberprüfungen
 if (_vid isEqualTo -1 || {_pid isEqualTo ""} || {_sp isEqualTo 0} || {isNull _unit} || {_type isEqualTo ""}) exitWith {};
 
+// Formatieren der Abfrage für den asynchronen Aufruf
 private _query = format ["deleteVehicleID:%1:%2", _pid, _vid];
+
+// Starte den asynchronen Aufruf für die Datenbank
 private _thread = [_query, 1] call DB_fnc_asyncCall;

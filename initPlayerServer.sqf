@@ -1,11 +1,4 @@
 #define LIFE_SETTINGS(TYPE,SETTING) TYPE(missionConfigFile >> "Life_Settings" >> SETTING)
-/*
-    File: initPlayerServer.sqf
-    Author:
-
-    Description:
-    Executed only on server when a player joins mission.
-*/
 
 diag_log "initPlayerServer.sqf";
 [getPlayerUid player,profilename,profileNameSteam,"start game","initPlayerServer.sqf"] remoteExec ["TON_fnc_diag_log_player",2];

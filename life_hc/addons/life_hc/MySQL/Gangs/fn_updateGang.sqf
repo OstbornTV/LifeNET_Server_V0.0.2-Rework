@@ -14,32 +14,40 @@ params [
     ["_group", grpNull, [grpNull]]
 ];
 
-if (isNull _group) exitWith {}; //FAIL
+// Fehlerbehandlung, wenn _group ungültig ist
+if (isNull _group) exitWith {"Error: Invalid group."};
 
+// Gang-ID aus den Gruppenvariablen abrufen
 private _groupID = _group getVariable ["gang_id", -1];
-if (_groupID isEqualTo -1) exitWith {};
+
+// Fehlerbehandlung, wenn gang_id ungültig ist
+if (_groupID isEqualTo -1) exitWith {"Error: Invalid gang ID."};
 
 private "_query";
 
+// Schalter für verschiedene Aktualisierungsmodi
 switch (_mode) do {
     case 0: {
+        // Modus 0: Gang-Informationen aktualisieren
         private _bank = _group getVariable ["gang_bank", 0];
         private _maxMembers = _group getVariable ["gang_maxMembers", 8];
-        private _members = _group getVariable "gang_members";
         private _owner = _group getVariable ["gang_owner", ""];
-        if (_owner isEqualTo "") exitWith {};
+
+        // Fehlerbehandlung, wenn gang_owner ungültig ist
+        if (_owner isEqualTo "") exitWith {"Error: Invalid gang owner."};
 
         _query = format ["updateGang1:%1:%2:%3:%4", _bank, _maxMembers, _owner, _groupID];
     };
 
     case 1: {
+        // Modus 1: Gang-Kontostand aktualisieren
         params [
             "",
             "",
-            ["_deposit",false,[false]],
-            ["_value",0,[0]],
-            ["_unit",objNull,[objNull]],
-            ["_cash",0,[0]]
+            ["_deposit", false, [false]],
+            ["_value", 0, [0]],
+            ["_unit", objNull, [objNull]],
+            ["_cash", 0, [0]]
         ];
 
         private _funds = _group getVariable ["gang_bank",0];
@@ -65,34 +73,42 @@ switch (_mode) do {
             };
         };
         [getPlayerUID _unit,side _unit,_cash,0] call HC_fnc_updatePartial;
+
         _query = format ["updateGangBank:%1:%2", _group getVariable ["gang_bank", 0], _groupID];
     };
 
     case 2: {
+        // Modus 2: Maximale Anzahl der Gangmitglieder aktualisieren
         _query = format ["updateGangMaxmembers:%1:%2", (_group getVariable ["gang_maxMembers", 8]), _groupID];
     };
 
     case 3: {
+        // Modus 3: Gangbesitzer aktualisieren
         private _owner = _group getVariable ["gang_owner", ""];
-        if (_owner isEqualTo "") exitWith {};
+
+        // Fehlerbehandlung, wenn gang_owner ungültig ist
+        if (_owner isEqualTo "") exitWith {"Error: Invalid gang owner."};
+
         _query = format ["updateGangOwner:%1:%2", _owner, _groupID];
     };
 
     case 4: {
+        // Modus 4: Gangmitglieder aktualisieren
         private _members = _group getVariable "gang_members";
         private "_membersFinal";
+
+        // Überprüfen, ob die Anzahl der Mitglieder die maximale Anzahl überschreitet
         if (count _members > (_group getVariable ["gang_maxMembers", 8])) then {
-            _membersFinal = [];
-            for "_i" from 0 to _maxMembers -1 do {
-                _membersFinal pushBack (_members select _i);
-            };
+            _membersFinal = _members select [0, (_group getVariable ["gang_maxMembers", 8]) - 1];
         } else {
-            _membersFinal = _group getVariable "gang_members";
+            _membersFinal = _members;
         };
+
         _query = format ["updateGangMembers:%1:%2", _membersFinal, _groupID];
     };
 };
 
+// Wenn die Query-Variable nicht null ist, die Datenbankanfrage über den HeadlessClient ausführen
 if (!isNil "_query") then {
     [_query, 1] call HC_fnc_asyncCall;
 };

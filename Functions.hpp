@@ -129,7 +129,6 @@ class Life_Client_Core {
         class copLights {};
         class copMarkers {};
         class copSearch {};
-        class copSiren {};
         class doorAnimate {};
         class fedCamDisplay {};
         class licenseCheck {};
@@ -140,7 +139,6 @@ class Life_Client_Core {
         class restrain {};
         class searchClient {};
         class seizeClient {};
-        class sirenLights {};
         class spikeStripEffect {};
         class ticketGive {};
         class ticketPaid {};
@@ -150,6 +148,12 @@ class Life_Client_Core {
         class wantedGrab {};
         class seizeWeapon {};
     };
+
+    class Faction {
+        file = "core\faction";
+        class emergencySiren {};
+        class vehicleLights {}
+    }
 
     class Dialog_Controls {
         file = "dialog\function";
@@ -187,7 +191,7 @@ class Life_Client_Core {
         class calWeightDiff {};
         class checkMap {};
         class clearVehicleAmmo {};
-        class onGameInterrupt {}; //NEW
+        class onGameInterrupt {};
         class fetchCfgDetails {};
         class fetchVehInfo {};
         class isDamaged {};
@@ -288,11 +292,8 @@ class Life_Client_Core {
     class Medical_System {
         file = "core\medical";
         class deathScreen {};
-        class medicLights {};
         class medicMarkers {};
         class medicRequest {};
-        class medicSiren {};
-        class medicSirenLights {};
         class onPlayerKilled {};
         class onPlayerRespawn {};
         class requestMedic {};
