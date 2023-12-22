@@ -1,4 +1,5 @@
 #include "\life_hc\hc_macros.hpp"
+
 /*
     File: fn_spawnVehicle.sqf
     Author: Bryan "Tonic" Boardwine
@@ -6,10 +7,10 @@
     This file is for Nanou's HeadlessClient.
 
     Description:
-    Sends the query request to the database, if an array is returned then it creates
-    the vehicle if it's not in use or dead.
+    Sends the query request to the database, creates the vehicle if available and not in use or dead.
 */
 
+// Parameterdefinitionen
 params [
     ["_vid", -1, [0]],
     ["_pid", "", [""]],
@@ -20,27 +21,28 @@ params [
     "_spawntext"
 ];
 
+// Lokale Variablen initialisieren
 private _unit_return = _unit;
 private _name = name _unit;
 private _side = side _unit;
 
-
+// Überprüfen, ob _vid und _pid gültige Werte haben
 if (_vid isEqualTo -1 || {_pid isEqualTo ""}) exitWith {};
+
+// Überprüfen, ob _vid nicht bereits verwendet wird
 if (_vid in serv_sv_use) exitWith {};
 serv_sv_use pushBack _vid;
 
 private _servIndex = serv_sv_use find _vid;
 
-private if ((_vInfo select 14) isEqualTo 1) then {
- [1,"Ihr Fahrzeug ist verfügbar und versichert!"] remoteExecCall ["life_fnc_broadcast",_unit];
-}else{
- [1,"Ihr Fahrzeug ist verfügbar, aber nicht versichert!"] remoteExecCall ["life_fnc_broadcast",_unit];
-};
+private _vInfo = [];
 
+// Informationen über das Fahrzeug abrufen
 private _tickTime = diag_tickTime;
 private _query = format ["selectVehiclesMore:%1:%2", _vid, _pid];
 private _queryResult = [_query, 2] call HC_fnc_asyncCall;
 
+// Debug-Logging, falls Debug-Modus aktiviert ist
 if (EXTDB_SETTING(getNumber,"DebugMode") isEqualTo 1) then {
     diag_log "------------- Client Query Request -------------";
     diag_log format ["QUERY: %1",_query];
@@ -49,46 +51,50 @@ if (EXTDB_SETTING(getNumber,"DebugMode") isEqualTo 1) then {
     diag_log "------------------------------------------------";
 };
 
+// Wenn die Abfrage fehlschlägt oder leer ist, beende das Skript
 if (_queryResult isEqualType "") exitWith {};
 
-private _vInfo = _queryResult;
-if (isNil "_vInfo") exitWith {serv_sv_use deleteAt _servIndex;};
-if (_vInfo isEqualTo []) exitWith {serv_sv_use deleteAt _servIndex;};
+// Fahrzeuginformationen aktualisieren
+_vInfo = _queryResult;
 
+// Überprüfen, ob Fahrzeuginformationen gültig sind
+if (isNil "_vInfo" || {_vInfo isEqualTo []}) exitWith {serv_sv_use deleteAt _servIndex;};
+
+// Überprüfen, ob das Fahrzeug zerstört ist
 if ((_vInfo select 5) isEqualTo 0) exitWith {
     serv_sv_use deleteAt _servIndex;
     [1,"STR_Garage_SQLError_Destroyed",true,[_vInfo select 2]] remoteExecCall ["life_fnc_broadcast",_unit];
 };
 
+// Überprüfen, ob das Fahrzeug aktiv ist
 if ((_vInfo select 6) isEqualTo 1) exitWith {
     serv_sv_use deleteAt _servIndex;
     [1,"STR_Garage_SQLError_Active",true,[_vInfo select 2]] remoteExecCall ["life_fnc_broadcast",_unit];
 };
 
 private "_nearVehicles";
+
+// Überprüfen, ob der Spawnpunkt gültig ist
 if !(_sp isEqualType "") then {
     _nearVehicles = nearestObjects[_sp,["Car","Air","Ship"],10];
 } else {
     _nearVehicles = [];
 };
 
+// Überprüfen, ob der Spawnpunkt in Ordnung ist
 if !(_nearVehicles isEqualTo []) exitWith {
     serv_sv_use deleteAt _servIndex;
     [_price,_unit_return] remoteExecCall ["life_fnc_garageRefund",_unit];
     [1,"STR_Garage_SpawnPointError",true] remoteExecCall ["life_fnc_broadcast",_unit];
 };
 
+// Abfrage für das Update des Fahrzeugs in der Datenbank
 _query = format ["updateVehicle:%1:%2", _pid, _vid];
-
-private _trunk = _vInfo select 9;
-private _gear = _vInfo select 10;
-private _damage = _vInfo select 12;
-private _wasIllegal = _vInfo select 13;
-_wasIllegal = _wasIllegal isEqualTo 1;
-
 [_query, 1] call HC_fnc_asyncCall;
 
 private "_vehicle";
+
+// Fahrzeug erstellen und positionieren
 if (_sp isEqualType "") then {
     _vehicle = createVehicle[(_vInfo select 2),[0,0,999],[],0,"NONE"];
     waitUntil {!isNil "_vehicle" && {!isNull _vehicle}};
@@ -104,29 +110,39 @@ if (_sp isEqualType "") then {
     _vehicle setVectorUp (surfaceNormal _sp);
     _vehicle setDir _dir;
 };
+
+// Fahrzeug wieder angreifbar machen
 _vehicle allowDamage true;
-//Send keys over the network.
+
+// Fahrzeugschlüssel über das Netzwerk senden
 [_vehicle] remoteExecCall ["life_fnc_addVehicle2Chain", _unit];
 
+// Fahrzeug für den Spieler sperren
 [_pid,_side,_vehicle,1] remoteExecCall ["TON_fnc_keyManagement",RSERV];
 _vehicle lock 2;
-//Reskin the vehicle
+
+// Fahrzeug umfärben
 [_vehicle, _vInfo select 8] remoteExecCall ["life_fnc_colorVehicle", _unit];
 _vehicle setVariable ["vehicle_info_owners",[[ _pid, _name]],true];
 _vehicle setVariable ["dbInfo",[(_vInfo select 4),(_vInfo select 7),(_vInfo select 14)],true];
-_vehicle disableTIEquipment true; //No Thermals.. They're cheap but addictive.
+_vehicle disableTIEquipment true; // Keine Thermals
+
+// Munition des Fahrzeugs leeren
 [_vehicle] call life_fnc_clearVehicleAmmo;
 
+// Wenn die Einstellung zum Speichern von virtuellen Gegenständen aktiviert ist
 if (LIFE_SETTINGS(getNumber,"save_vehicle_virtualItems") isEqualTo 1) then {
-
+    // Fahrzeugtrunk aktualisieren
     _vehicle setVariable ["Trunk",_trunk,true];
-    
+
+    // Wenn das Fahrzeug illegal ist
     if (_wasIllegal) then {
         private _refPoint = if (_sp isEqualType "") then {getMarkerPos _sp;} else {_sp;};
         
         private _distance = 100000;
         private "_location";
 
+        // Überprüfen, ob das Fahrzeug in der Nähe einer Stadt oder eines Dorfes ist
         {
             private _tempLocation = nearestLocation [_refPoint, _x];
             private _tempDistance = _refPoint distance _tempLocation;
@@ -136,26 +152,30 @@ if (LIFE_SETTINGS(getNumber,"save_vehicle_virtualItems") isEqualTo 1) then {
                 _distance = _tempDistance;
             };
             false
-    
         } count ["NameCityCapital", "NameCity", "NameVillage"];
  
         _location = text _location;
         [1, "STR_NOTF_BlackListedVehicle", true, [_location,_name]] remoteExecCall ["life_fnc_broadcast", west];
 
+        // Fahrzeug in die Blacklist eintragen
         _query = format ["updateVehicleBlacklist:%1:%2", _vid, _pid];
         [_query, 1] call HC_fnc_asyncCall;
     };   
 } else {
+    // Wenn die Einstellung zum Speichern von virtuellen Gegenständen deaktiviert ist
     _vehicle setVariable ["Trunk", [[], 0], true];
 };
 
+// Wenn die Einstellung zum Speichern von Treibstoff aktiviert ist
 if (LIFE_SETTINGS(getNumber,"save_vehicle_fuel") isEqualTo 1) then {
     _vehicle setFuel (_vInfo select 11);
 } else {
     _vehicle setFuel 1;
 };
 
+// Wenn das Fahrzeug Inventar hat und die Einstellung zum Speichern des Inventars aktiviert ist
 if (!(_gear isEqualTo []) && (LIFE_SETTINGS(getNumber,"save_vehicle_inventory") isEqualTo 1)) then {
+    // Gegenstände, Magazine, Waffen und Rucksäcke dem Fahrzeug hinzufügen
     _items = _gear select 0;
     _mags = _gear select 1;
     _weapons = _gear select 2;
@@ -175,7 +195,9 @@ if (!(_gear isEqualTo []) && (LIFE_SETTINGS(getNumber,"save_vehicle_inventory") 
     };
 };
 
+// Wenn das Fahrzeug Schäden hat und die Einstellung zum Speichern von Schäden aktiviert ist
 if (!(_damage isEqualTo []) && (LIFE_SETTINGS(getNumber,"save_vehicle_damage") isEqualTo 1)) then {
+    // Schäden am Fahrzeug setzen
     _parts = getAllHitPointsDamage _vehicle;
 
     for "_i" from 0 to ((count _damage) - 1) do {
@@ -183,7 +205,7 @@ if (!(_damage isEqualTo []) && (LIFE_SETTINGS(getNumber,"save_vehicle_damage") i
     };
 };
 
-//Sets of animations
+// Animationen setzen, abhängig von Fahrzeugtyp und Fraktion
 if ((_vInfo select 1) isEqualTo "civ" && (_vInfo select 2) isEqualTo "B_Heli_Light_01_F" && !((_vInfo select 8) isEqualTo 13)) then {
     [_vehicle,"civ_littlebird",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
@@ -196,11 +218,15 @@ if ((_vInfo select 1) isEqualTo "med" && (_vInfo select 2) isEqualTo "C_Offroad_
     [_vehicle,"med_offroad",true] remoteExecCall ["life_fnc_vehicleAnimate",_unit];
 };
 
+// Broadcast-Nachricht je nach Versicherungsstatus
 if ((_vInfo select 14) isEqualTo 1) then {
- [1,"Ihr Fahrzeug ist verfügbar und versichert!"] remoteExecCall ["life_fnc_broadcast",_unit];
-}else{
- [1,"Ihr Fahrzeug ist verfügbar, aber nicht versichert!"] remoteExecCall ["life_fnc_broadcast",_unit];
+    [1,"Ihr Fahrzeug ist verfügbar und versichert!"] remoteExecCall ["life_fnc_broadcast",_unit];
+} else {
+    [1,"Ihr Fahrzeug ist verfügbar, aber nicht versichert!"] remoteExecCall ["life_fnc_broadcast",_unit];
 };
 
+// Benutzerdefinierte Broadcast-Nachricht senden
 [1, _spawntext] remoteExecCall ["life_fnc_broadcast", _unit];
+
+// Verwendetes Fahrzeug aus der Liste entfernen
 serv_sv_use deleteAt _servIndex;

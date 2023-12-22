@@ -6,10 +6,13 @@
 
 	This code is provided by CXP SCRIPTS on https://bytex.market/sellers/profile/K970748533
 */
+// Initialisiere das Array für Zonennamen
 cxpadg_zonesNames = [];
 
+// Lese die Konfigurationen aus der Missionskonfiguration
 private _rootConfig = missionConfigFile >> "Cxp_Config_AdvGather";
 
+// Iteriere über Konfigurationen und erstelle Marker für Zonen
 private "_mk";
 private "_mkName";
 private "_currCfg";
@@ -35,6 +38,7 @@ private "_zoneMkSize";
 				continue;
 			};
 
+			// Erstelle den Marker mit einem eindeutigen Namen
 			_mkName = format["cxpadg@zone@%1@%2@%3", _type, _currCfg, _zoneMkName];
 			cxpadg_zonesNames pushBack _mkName;
 			_mk = createMarkerLocal [_mkName, getMarkerPos _zoneMkName];
@@ -47,4 +51,6 @@ private "_zoneMkSize";
 	} count ("true" configClasses _x);
 	false
 } count ("true" configClasses _rootConfig);
+
+// Setze eine Flagge, dass der Vorgang gestartet wurde
 cxpadg_started = true;

@@ -4,29 +4,41 @@
     Author: Bryan "Tonic" Boardwine
 
     Description:
-    Figure it out.
+    Behandelt die Funktionalität der Geldeinzahlung auf das Bankkonto in Altis Life.
 */
+
+// Lokale Variable für den Betrag deklarieren
 private ["_value"];
+
+// Extrahiere den Betrag aus dem Steuerelement
 _value = parseNumber(ctrlText 2702);
 
-//Series of stupid checks
-if (_value > 999999) exitWith {hint localize "STR_ATM_GreaterThan";};
-if (_value < 0) exitWith {};
-if (!([str(_value)] call life_util_fnc_isNumber)) exitWith {hint localize "STR_ATM_notnumeric"};
-if (_value > CASH) exitWith {hint localize "STR_ATM_NotEnoughCash"};
+// Überprüfe verschiedene Bedingungen, um sicherzustellen, dass die Einzahlung gültig ist
+if (_value > 999999 || _value < 0 || !([str(_value)] call life_util_fnc_isNumber) || _value > CASH) exitWith {
+    // Zeige eine Fehlermeldung entsprechend der fehlgeschlagenen Überprüfungen
+    hint localize [
+        "STR_ATM_GreaterThan", "STR_ATM_notnumeric", "STR_ATM_NotEnoughCash"
+    ] select [
+        (_value > 999999), (_value < 0), !([str(_value)] call life_util_fnc_isNumber), (_value > CASH)
+    ];
+};
 
+// Führe die Einzahlung durch und aktualisiere die Kontostände
 CASH = CASH - _value;
 BANK = BANK + _value;
 
-hint format [localize "STR_ATM_DepositSuccess",[_value] call life_fnc_numberText];
+// Zeige eine Erfolgsmeldung
+hint format [localize "STR_ATM_DepositSuccess", [_value] call life_fnc_numberText];
+
+// Aktualisiere das ATM-Menü und sende partielle Updates an die Clients
 [] call life_fnc_atmMenu;
 [6] call SOCK_fnc_updatePartial;
 
-if (LIFE_SETTINGS(getNumber,"player_moneyLog") isEqualTo 1) then {
-    if (LIFE_SETTINGS(getNumber,"battlEye_friendlyLogging") isEqualTo 1) then {
-        money_log = format [localize "STR_DL_ML_depositedBank_BEF",_value,[BANK] call life_fnc_numberText,[CASH] call life_fnc_numberText];
-    } else {
-        money_log = format [localize "STR_DL_ML_depositedBank",profileName,(getPlayerUID player),_value,[BANK] call life_fnc_numberText,[CASH] call life_fnc_numberText];
-    };
+// Protokolliere die Einzahlung, wenn aktiviert
+if (LIFE_SETTINGS(getNumber, "player_moneyLog") isEqualTo 1) then {
+    money_log = format [
+        localize ["STR_DL_ML_depositedBank", "STR_DL_ML_depositedBank_BEF"],
+        profileName, (getPlayerUID player), _value, [BANK, CASH] call life_fnc_numberText
+    ];
     publicVariableServer "money_log";
 };

@@ -5,18 +5,37 @@
     Description:
     Master eventhandler file
 */
-player addEventHandler ["Killed", {_this call life_fnc_onPlayerKilled}];
-player addEventHandler ["HandleDamage", {_this call life_fnc_handleDamage}];
-player addEventHandler ["Respawn", {_this call life_fnc_onPlayerRespawn}];
-player addEventHandler ["Take", {_this call life_fnc_onTakeItem}];
-player addEventHandler ["Fired", {_this call life_fnc_onFired}];
-player addEventHandler ["InventoryClosed", {_this call life_fnc_inventoryClosed}];
-player addEventHandler ["InventoryOpened", {_this call life_fnc_inventoryOpened}];
-player addEventHandler ["HandleRating", {0}];
 
-player addEventHandler ["GetInMan", {_this call life_fnc_getInMan}];
-player addEventHandler ["GetOutMan", {_this call life_fnc_getOutMan}];
+// Definiere die Event-Handler-Funktionen
+private ["_onPlayerKilledEH", "_handleDamageEH", "_onPlayerRespawnEH", "_onTakeItemEH", "_onFiredEH", "_inventoryClosedEH", "_inventoryOpenedEH", "_handleRatingEH", "_getInManEH", "_getOutManEH", "_checkMapEH", "_onGameInterruptEH"];
 
-addMissionEventHandler ["Map", {_this call life_fnc_checkMap}];
+_onPlayerKilledEH = {_this call life_fnc_onPlayerKilled};
+_handleDamageEH = {_this call life_fnc_handleDamage};
+_onPlayerRespawnEH = {_this call life_fnc_onPlayerRespawn};
+_onTakeItemEH = {_this call life_fnc_onTakeItem};
+_onFiredEH = {_this call life_fnc_onFired};
+_inventoryClosedEH = {_this call life_fnc_inventoryClosed};
+_inventoryOpenedEH = {_this call life_fnc_inventoryOpened};
+_handleRatingEH = {0}; // Dummy-Event-Handler für "HandleRating"
 
-[missionNamespace,"OnGameInterrupt",{_this call life_fnc_onGameInterrupt}] call BIS_fnc_addScriptedEventHandler;
+_getInManEH = {_this call life_fnc_getInMan};
+_getOutManEH = {_this call life_fnc_getOutMan};
+_checkMapEH = {_this call life_fnc_checkMap};
+_onGameInterruptEH = {_this call life_fnc_onGameInterrupt};
+
+// Registriere die Event-Handler-Funktionen
+player addEventHandler ["Killed", _onPlayerKilledEH];
+player addEventHandler ["HandleDamage", _handleDamageEH];
+player addEventHandler ["Respawn", _onPlayerRespawnEH];
+player addEventHandler ["Take", _onTakeItemEH];
+player addEventHandler ["Fired", _onFiredEH];
+player addEventHandler ["InventoryClosed", _inventoryClosedEH];
+player addEventHandler ["InventoryOpened", _inventoryOpenedEH];
+player addEventHandler ["HandleRating", _handleRatingEH];
+
+player addEventHandler ["GetInMan", _getInManEH];
+player addEventHandler ["GetOutMan", _getOutManEH];
+
+addMissionEventHandler ["Map", _checkMapEH];
+
+[missionNamespace, "OnGameInterrupt", _onGameInterruptEH] call BIS_fnc_addScriptedEventHandler;

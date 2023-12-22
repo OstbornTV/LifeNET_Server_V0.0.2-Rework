@@ -1,4 +1,5 @@
 #include "script_macros.hpp"
+
 /*
     File: init.sqf
     Author: Bryan "Tonic" Boardwine
@@ -10,6 +11,7 @@
     Initialize the server and required systems.
 */
 
+// Zeitstempel für die Diagnoseprotokollierung
 _timeStamp = diag_tickTime;
 diag_log "----------------------------------------------------------------------------------------------------";
 diag_log "---------------------------------- Starting Altis Life Server Init ---------------------------------";
@@ -17,6 +19,8 @@ diag_log format["------------------------------------------ Version %1 ---------
 diag_log "----------------------------------------------------------------------------------------------------";
 
 private ["_dome","_rsb","_timeStamp","_extDBNotLoaded"];
+
+// Variablen für die Aktivierung des Headless Clients und extDB3
 DB_Async_Active = false;
 DB_Async_ExtraLock = false;
 life_server_isReady = false;
@@ -26,27 +30,30 @@ publicVariable "life_server_isReady";
 life_save_civilian_position = if (LIFE_SETTINGS(getNumber,"save_civilian_position") isEqualTo 0) then {false} else {true};
 
 /*
-    Prepare the headless client.
+    Headless Client vorbereiten.
 */
 life_HC_isActive = false;
 publicVariable "life_HC_isActive";
 HC_Life = false;
 publicVariable "HC_Life";
 
+// Wenn Headless-Client-Unterstützung aktiviert ist, führe das entsprechende Initialisierungsskript aus
 if (EXTDB_SETTING(getNumber,"HeadlessSupport") isEqualTo 1) then {
     [] execVM "\life_server\initHC.sqf";
 };
 
 /*
-    Prepare extDB before starting the initialization process
-    for the server.
+    extDB vorbereiten, bevor der Initialisierungsprozess für den Server gestartet wird.
 */
 
+// Überprüfen, ob die SQL-ID in der UI-Namespace-Variablen vorhanden ist
 if (isNil {uiNamespace getVariable "life_sql_id"}) then {
+    // Wenn nicht vorhanden, initialisiere extDB3 und füge die Datenbankverbindung hinzu
     life_sql_id = round(random(9999));
     CONSTVAR(life_sql_id);
     uiNamespace setVariable ["life_sql_id",life_sql_id];
         try {
+        // Füge die Datenbank und das Protokoll für die extDB3-Verbindung hinzu
         _result = EXTDB format ["9:ADD_DATABASE:%1",EXTDB_SETTING(getText,"DatabaseName")];
         if (!(_result isEqualTo "[1]")) then {throw "extDB3: Error with Database Connection"};
         _result = EXTDB format ["9:ADD_DATABASE_PROTOCOL:%2:SQL_CUSTOM:%1:AL.ini",FETCH_CONST(life_sql_id),EXTDB_SETTING(getText,"DatabaseName")];
@@ -59,12 +66,13 @@ if (isNil {uiNamespace getVariable "life_sql_id"}) then {
     EXTDB "9:LOCK";
     diag_log "extDB3: Connected to Database";
 } else {
+    // Wenn vorhanden, verwende die vorhandene SQL-ID
     life_sql_id = uiNamespace getVariable "life_sql_id";
     CONSTVAR(life_sql_id);
     diag_log "extDB3: Still Connected to Database";
 };
 
-
+// Wenn extDB3 nicht vollständig initialisiert ist, setze die entsprechende Variable und beende den Rest des Initialisierungsprozesses
 if (_extDBNotLoaded isEqualType []) exitWith {
     life_server_extDB_notLoaded = true;
     publicVariable "life_server_extDB_notLoaded";
@@ -72,23 +80,23 @@ if (_extDBNotLoaded isEqualType []) exitWith {
 life_server_extDB_notLoaded = false;
 publicVariable "life_server_extDB_notLoaded";
 
-/* Run stored procedures for SQL side cleanup */
+/* Gespeicherte Prozeduren für SQL-basierte Bereinigungen ausführen */
 ["resetLifeVehicles", 1] call DB_fnc_asyncCall;
 ["deleteDeadVehicles", 1] call DB_fnc_asyncCall;
 ["deleteOldHouses", 1] call DB_fnc_asyncCall;
 ["deleteOldGangs", 1] call DB_fnc_asyncCall;
 
-
-
+// Wenn die Option "save_civilian_position_restart" aktiviert ist, aktualisiere die Position der Zivilisten
 if (LIFE_SETTINGS(getNumber,"save_civilian_position_restart") isEqualTo 1) then {
     [] spawn {
         ["updateCivAlive", 1] call DB_fnc_asyncCall;
     };
 };
 
-/* Map-based server side initialization. */
+/* Kartenbasierte serverseitige Initialisierung. */
 master_group attachTo[bank_obj,[0,0,0]];
 
+// Waffen von Nicht-Spielern entfernen
 {
     if (!isPlayer _x) then {
         _npc = _x;
@@ -102,50 +110,45 @@ master_group attachTo[bank_obj,[0,0,0]];
 
 [8,true,12] execFSM "\life_server\FSM\timeModule.fsm";
 
+// Echtzeitmodul für Sommerinitialisierung ausführen
 [] execFSM "\life_server\FSM\sommer_realtime.fsm";
 
+// Admin-, Medic- und Cop-Levels initialisieren
 life_adminLevel = 0;
 life_medicLevel = 0;
 life_copLevel = 0;
 CONST(JxMxE_PublishVehicle,"false");
 
-/* Setup radio channels for west/independent/civilian */
+// Funkkanäle für West/Unabhängige/Zivilisten erstellen
 life_radio_west = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
 life_radio_civ = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
 life_radio_indep = radioChannelCreate [[0, 0.95, 1, 0.8], "Side Channel", "%UNIT_NAME", []];
 
-/* Set the amount of gold in the federal reserve at mission start */
+// Menge an Gold in der Bundesreserve zu Missionsbeginn setzen
 fed_bank setVariable ["safe",count playableUnits,true];
 
-/* Event handler for disconnecting players */
+// Event-Handler für das Trennen von Spielern hinzufügen
 addMissionEventHandler ["HandleDisconnect",{_this call TON_fnc_clientDisconnect; false;}];
 
-/* Set OwnerID players for Headless Client */
-TON_fnc_requestClientID =
-{
-    (_this select 1) setVariable ["life_clientID", owner (_this select 1), true];
-};
-"life_fnc_RequestClientId" addPublicVariableEventHandler TON_fnc_requestClientID;
-
-/* Event handler for logs */
+// Event-Handler für Logs hinzufügen
 "money_log" addPublicVariableEventHandler {diag_log (_this select 1)};
 "advanced_log" addPublicVariableEventHandler {diag_log (_this select 1)};
 
-/* Miscellaneous mission-required stuff */
+// Verschiedene für die Mission erforderliche Dinge
 life_wanted_list = [];
 
+// Funktionen für Häuser und Bereinigung initialisieren
 [] spawn TON_fnc_initHouses;
 cleanup = [] spawn TON_fnc_cleanup;
 
 TON_fnc_playtime_values = [];
 TON_fnc_playtime_values_request = [];
 
-//Just incase the Headless Client connects before anyone else
+// Nur für den Fall, dass sich der Headless-Client vor anderen verbindet
 publicVariable "TON_fnc_playtime_values";
 publicVariable "TON_fnc_playtime_values_request";
 
-
-/* Setup the federal reserve building(s) */
+// Bundesreservengebäude einrichten
 private _vaultHouse = [[["WL_Rosche", "Land_Medevac_house_V1_F"]]] call life_util_fnc_terrainSort;
 private _wl_roscheArray = [16019.5,16952.9,0];
 private _pos = [[["WL_Rosche", _wl_roscheArray]]] call life_util_fnc_terrainSort;
@@ -160,13 +163,14 @@ _rsb setVariable ["bis_disabled_Door_1",1,true];
 _dome allowDamage false;
 _rsb allowDamage false;
 
-/* Tell clients that the server is ready and is accepting queries */
+/* Clients mitteilen, dass der Server bereit ist und Anfragen akzeptiert */
 life_server_isReady = true;
 publicVariable "life_server_isReady";
 
-/* Initialize hunting zone(s) */
+/* Jagdzone(n) initialisieren */
 aiSpawn = ["hunting_zone",30] spawn TON_fnc_huntingZone;
 
+// Initialisierung von Event-Handlern für Leichen und Spike-Stripes
 server_corpses = [];
 addMissionEventHandler ["EntityRespawned", {_this call TON_fnc_entityRespawned}];
 addMissionEventHandler ["EntityKilled", {_this call TON_fnc_entityKilled}];

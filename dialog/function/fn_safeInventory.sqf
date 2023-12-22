@@ -6,25 +6,38 @@
     Description:
     Fills up the safes inventory.
 */
+
+// Parameter deklarieren und standardmäßige Werte festlegen
 params [
-    ["_safe",objNull,[objNull]]
+    ["_safe", objNull, [objNull]]
 ];
 
-if (isNull _safe) exitWith {closeDialog 0;};
+// Überprüfen, ob der Tresor existiert
+if (isNull _safe) exitWith { closeDialog 0; };
+
+// Serialisierung deaktivieren
 disableSerialization;
 
+// Safes-Inventar-Listbox zurücksetzen
 private _tInv = (findDisplay 3500) displayCtrl 3502;
 lbClear _tInv;
 
-private _safeInfo = _safe getVariable ["safe",-1];
-if (_safeInfo < 1) exitWith {closeDialog 0; hint localize "STR_Civ_VaultEmpty";};
+// Safe-Informationen abrufen
+private _safeInfo = _safe getVariable ["safe", -1];
 
-private _str = M_CONFIG(getText,"VirtualItems","goldbar","displayName");
-private _shrt = M_CONFIG(getText,"VirtualItems","goldbar","variable");
-private _icon = M_CONFIG(getText,"VirtualItems","goldbar","icon");
+// Überprüfen, ob der Safe leer ist
+if (_safeInfo < 1) exitWith { closeDialog 0; hint localize "STR_Civ_VaultEmpty"; };
 
-private _id = _tInv lbAdd format ["[%1] - %2",_safeInfo, _str];
-_tInv lbSetData [_id,_shrt];
+// Informationen für goldbar aus der Konfiguration abrufen
+private _str = M_CONFIG(getText, "VirtualItems", "goldbar", "displayName");
+private _shrt = M_CONFIG(getText, "VirtualItems", "goldbar", "variable");
+private _icon = M_CONFIG(getText, "VirtualItems", "goldbar", "icon");
+
+// Eintrag für goldbar in der Listbox erstellen
+private _id = _tInv lbAdd format ["[%1] - %2", _safeInfo, _str];
+_tInv lbSetData [_id, _shrt];
+
+// Bild für goldbar setzen, falls vorhanden
 if !(_icon isEqualTo "") then {
-    _tInv lbSetPicture [_id,_icon];
+    _tInv lbSetPicture [_id, _icon];
 };

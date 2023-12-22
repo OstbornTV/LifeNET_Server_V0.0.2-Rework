@@ -1,4 +1,5 @@
 #include "\life_hc\hc_macros.hpp"
+
 /*
     File: fn_wantedAdd.sqf
     Author: Bryan "Tonic" Boardwine"
@@ -13,32 +14,35 @@
 */
 
 params [
-    ["_uid","",[""]],
-    ["_name","",[""]],
-    ["_type","",[""]],
-    ["_customBounty",-1,[0]]
+    ["_uid","",[""]],             // UID der gesuchten Einheit
+    ["_name","",[""]],            // Name der gesuchten Einheit
+    ["_type","",[""]],            // Art der Straftat
+    ["_customBounty",-1,[0]]      // Benutzerdefinierte Belohnung für die Straftat (Standardwert: -1)
 ];
 
-if (_uid isEqualTo "" || {_type isEqualTo ""} || {_name isEqualTo ""}) exitWith {}; //Bad data passed.
+if (_uid isEqualTo "" || {_type isEqualTo ""} || {_name isEqualTo ""}) exitWith {};  // Beende das Skript bei ungültigen Parametern
 
-//What is the crime?
+// Welche Straftat liegt vor?
 private _crimesConfig = getArray(missionConfigFile >> "Life_Settings" >> "crimes");
 private _index = [_type, _crimesConfig] call life_util_fnc_index;
 
-if (_index isEqualTo -1) exitWith {};
+if (_index isEqualTo -1) exitWith {};  // Beende das Skript, wenn der Straftatentyp nicht gefunden wird
 
 _type = [_type, parseNumber ((_crimesConfig select _index) select 1)];
 
-if (_type isEqualTo []) exitWith {}; //Not our information being passed...
-//Is there a custom bounty being sent? Set that as the pricing.
+if (_type isEqualTo []) exitWith {};  // Beende das Skript, wenn der Straftatentyp ungültig ist
+
+// Wird eine benutzerdefinierte Belohnung übergeben? Setze sie als Preis.
 if !(_customBounty isEqualTo -1) then {_type set[1,_customBounty];};
-//Search the wanted list to make sure they are not on it.
+
+// Überprüfe die Wanted-Liste, um sicherzustellen, dass die Einheit nicht bereits darauf steht.
 private _query = format ["selectWantedID:%1", _uid];
 private _queryResult = [_query,2,true] call HC_fnc_asyncCall;
 private _val = _type select 1;
 private _number = _type select 0;
 
 if !(_queryResult isEqualTo []) then {
+    // Eintrag existiert bereits, aktualisiere die bestehenden Straftaten
     _query = format ["selectWantedCrimes:%1", _uid];
     _queryResult = [_query,2] call HC_fnc_asyncCall;
     _pastCrimes = _queryResult select 0;
@@ -48,6 +52,7 @@ if !(_queryResult isEqualTo []) then {
     _query = format ["updateWanted:%1:%2:%3", _pastCrimes, _val, _uid];
     [_query,1] call HC_fnc_asyncCall;
 } else {
+    // Eintrag existiert nicht, füge einen neuen Eintrag hinzu
     _crime = [_type select 0];
     _query = format ["insertWanted:%1:%2:%3:%4", _uid, _name, _crime, _val];
     [_query,1] call HC_fnc_asyncCall;

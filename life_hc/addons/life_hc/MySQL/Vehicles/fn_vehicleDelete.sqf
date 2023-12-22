@@ -10,14 +10,18 @@
 */
 
 params [
-    ["_vid", -1, [0]],
-    ["_pid", "", [""]],
-    ["_sp", 2500, [0]],
-    ["_unit", objNull, [objNull]],
-    ["_type", "", [""]]
+    ["_vid", -1, [0]], // Fahrzeug-ID (Standardwert: -1)
+    ["_pid", "", [""]], // Spieler-ID
+    ["_sp", 2500, [0]], // Spawn-Punkt (Standardwert: 2500)
+    ["_unit", objNull, [objNull]], // Einheit (Spieler)
+    ["_type", "", [""]] // Fahrzeugtyp
 ];
 
+// Überprüfen auf leere oder ungültige Parameter
 if (_vid isEqualTo -1 || {_pid isEqualTo ""} || {_sp isEqualTo 0} || {isNull _unit} || {_type isEqualTo ""}) exitWith {};
 
+// Erstellen Sie die SQL-Abfrage zum Löschen des Fahrzeugs aus der Datenbank
 private _query = format ["deleteVehicleID:%1:%2", _pid, _vid];
+
+// Führen Sie die asynchrone Datenbankanfrage aus und erhalten Sie den Thread
 private _thread = [_query, 1] call HC_fnc_asyncCall;

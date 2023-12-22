@@ -8,34 +8,29 @@
 
     put function in init file then execute it with:
     call getFuelpumps;
-    getFuelpumps =
-    {
-        _pos = getArray(configFile >> "CfgWorlds" >> worldName >> "centerPosition");
-        _Station = nearestobjects [_pos,["Land_fs_feed_F","Land_FuelStation_Feed_F"], 25000];
-        _br = toString [13, 10];
-        _tab = toString [9];
-
-        _TexteSortie = "_NiiRoZz_Station_Essence = [" + _br;
-
-        {
-            _Array = [getpos _x];
-            _TexteSortie = _TexteSortie + _tab + (str _Array);
-            _TexteSortie = if (_forEachIndex < ((count _Station) - 1)) then {_TexteSortie + ", " + _br} else {_TexteSortie + _br};
-        } forEach _Station;
-        _TexteSortie = _TexteSortie + "];";
-        hint "Completed";
-        copyToClipboard _TexteSortie;
-    };
 */
-private _wl_roschePositions = [
-    []
-];
 
-private _stationPositions = [[["WL_Rosche", _wl_roschePositions]]] call life_util_fnc_terrainSort;
-
+// Funktion, um Treibstoffpumpen zu erstellen und Aktionen hinzuzufügen
+getFuelpumps =
 {
-    private _pump = nearestObjects [_x,["Land_fs_feed_F","Land_FuelStation_01_pump_F","Land_FuelStation_02_pump_F"],5] select 0;
-    _pump setFuelCargo 0;
-    _pump addAction [localize "STR_Action_Pump", life_fnc_fuelStatOpen, 1, 3, true, true, "", '_this distance _target < 5 && cursorObject isEqualTo _target'];
-    false
-} count _stationPositions;
+    private _wl_roschePositions = [
+        // Hier können weitere Positionen hinzugefügt werden, wenn nötig
+    ];
+
+    private _stationPositions = [[["WL_Rosche", _wl_roschePositions]]] call life_util_fnc_terrainSort;
+
+    {
+        private _pump = nearestObjects [_x, ["Land_fs_feed_F", "Land_FuelStation_01_pump_F", "Land_FuelStation_02_pump_F"], 5] select 0;
+        _pump setFuelCargo 0;
+
+        // Füge Aktion hinzu, um den Treibstoffvorgang zu starten
+        _pump addAction [localize "STR_Action_Pump", life_fnc_fuelStatOpen, 1, 3, true, true, "", '_this distance _target < 5 && cursorObject isEqualTo _target'];
+
+        false
+    } forEach _stationPositions;
+
+    hint "Completed"; // Hinweis für den Abschluss
+};
+
+// Aufruf der Funktion
+call getFuelpumps;

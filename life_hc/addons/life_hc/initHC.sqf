@@ -1,4 +1,5 @@
 #include "hc_macros.hpp"
+
 /*
     File: fn_initHC.sqf
     Author: Nanou
@@ -7,25 +8,30 @@
     Initialize the headless client.
 */
 
+// Zeitstempel für die Diagnoseprotokollierung
 _timeStamp = diag_tickTime;
 diag_log "----------------------------------------------------------------------------------------------------";
 diag_log "------------------------------------ Starting Altis Life HC Init -----------------------------------";
 diag_log format["-------------------------------------------- Version %1 -----------------------------------------",(LIFE_SETTINGS(getText,"framework_version"))];
 diag_log "----------------------------------------------------------------------------------------------------";
 
+// Private Variable zur Überprüfung, ob extDB3 geladen ist
 private ["_timeStamp","_extDBNotLoaded"];
+
+// Überprüfen Sie, ob die Headless-Client-Unterstützung in den Einstellungen aktiviert ist
 if (EXTDB_SETTING(getNumber,"HeadlessSupport") isEqualTo 0) exitWith {};
 
 _extDBNotLoaded = "";
 
-life_save_civilian_position = if (LIFE_SETTINGS(getNumber,"save_civilian_position") isEqualTo 0) then {false} else {true};
-
+// Überprüfen Sie, ob die SQL-ID in der UI-Namespace-Variablen vorhanden ist
 if (isNil {uiNamespace getVariable "life_sql_id"}) then {
+    // Wenn nicht vorhanden, initialisiere extDB3 und füge die Datenbankverbindung hinzu
     life_sql_id = round(random(9999));
     CONSTVAR(life_sql_id);
     uiNamespace setVariable ["life_sql_id",life_sql_id];
 
     try {
+        // Füge die Datenbank und das Protokoll für die extDB3-Verbindung hinzu
         _result = EXTDB format ["9:ADD_DATABASE:%1",EXTDB_SETTING(getText,"DatabaseName")];
         if (!(_result isEqualTo "[1]")) then {throw "extDB3: Error with Database Connection"};
         _result = EXTDB format ["9:ADD_DATABASE_PROTOCOL:%2:SQL_CUSTOM:%1:AL.ini",FETCH_CONST(life_sql_id),EXTDB_SETTING(getText,"DatabaseName")];
@@ -39,11 +45,13 @@ if (isNil {uiNamespace getVariable "life_sql_id"}) then {
     EXTDB "9:LOCK";
     diag_log "extDB3: Connected to Database";
 } else {
+    // Wenn vorhanden, verwende die vorhandene SQL-ID
     life_sql_id = uiNamespace getVariable "life_sql_id";
     CONSTVAR(life_sql_id);
     diag_log "extDB3: Still Connected to Database";
 };
 
+// Wenn extDB3 nicht vollständig initialisiert ist, beende den Rest des Initialisierungsprozesses
 if (_extDBNotLoaded isEqualType []) then {
     [] spawn {
         for "_i" from 0 to 1 step 0 do {
@@ -53,22 +61,21 @@ if (_extDBNotLoaded isEqualType []) then {
     };
 };
 
-if (_extDBNotLoaded isEqualType []) exitWith {}; //extDB3-HC did not fully initialize so terminate the rest of the initialization process.
+if (_extDBNotLoaded isEqualType []) exitWith {}; // extDB3-HC hat sich nicht vollständig initialisiert, beende den Rest des Initialisierungsprozesses.
 
+// Führe verschiedene Funktionen aus, um die Datenbank zu bereinigen und vorzubereiten
 ["resetLifeVehicles", 1] call HC_fnc_asyncCall;
 ["deleteDeadVehicles", 1] call HC_fnc_asyncCall;
 ["deleteOldHouses", 1] call HC_fnc_asyncCall;
 ["deleteOldGangs", 1] call HC_fnc_asyncCall;
 
-
-
+// Starte die Bereinigungsfunktion im Hintergrund
 [] spawn HC_fnc_cleanup;
 
-/* Initialize hunting zone(s) */
+// Initialisiere die Jagdzonen
 ["hunting_zone",30] spawn HC_fnc_huntingZone;
 
-// A list of allowed funcs to be passed on the hc (by external sources)
-// Have to be written in only lower capitals
+// Liste der erlaubten Funktionen, die vom HC verarbeitet werden können (von externen Quellen)
 HC_MPAllowedFuncs = [
     "hc_fnc_insertrequest",
     "hc_fnc_insertvehicle",
@@ -112,6 +119,7 @@ HC_MPAllowedFuncs = [
 
 CONSTVAR(HC_MPAllowedFuncs);
 
+// Starte einen Hintergrundprozess, um die `serv_sv_use`-Variable alle 60 Sekunden zu aktualisieren
 [] spawn {
     for "_i" from 0 to 1 step 0 do {
         uiSleep 60;
@@ -119,9 +127,11 @@ CONSTVAR(HC_MPAllowedFuncs);
     };
 };
 
+// Setze eine Variable, um anzuzeigen, dass der HC aktiv ist
 life_HC_isActive = true;
 publicVariable "life_HC_isActive";
 
+// Protokollierung des Endes der Initialisierung
 diag_log "----------------------------------------------------------------------------------------------------";
 diag_log format ["                 End of Altis Life HC Init :: Total Execution Time %1 seconds ",(diag_tickTime) - _timeStamp];
 diag_log "----------------------------------------------------------------------------------------------------";

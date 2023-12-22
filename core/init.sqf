@@ -5,45 +5,60 @@
     Description:
     Master client initialization file
 */
-diag_log "----------------------------------------------------------------------------------------------------";
+
+// Logging
 diag_log "--------------------------------- Starting Altis Life Client Init ----------------------------------";
-diag_log format["------------------------------------------ Version %1 -------------------------------------------",(LIFE_SETTINGS(getText,"framework_version"))];
+diag_log format ["------------------------------------------ Version %1 -------------------------------------------", (LIFE_SETTINGS(getText, "framework_version"))];
 diag_log "----------------------------------------------------------------------------------------------------";
 
-0 cutText[localize "STR_Init_ClientSetup","BLACK FADED",99999999];
+// Display initialization message
+0 cutText [localize "STR_Init_ClientSetup", "BLACK FADED", 99999999];
+
+// Timestamp for performance measurement
 _timeStamp = diag_tickTime;
 
+// Wait for the main display to be created
 waitUntil {!isNull (findDisplay 46)};
+
+// Compile and execute clientValidator script
 [] call compile preprocessFileLineNumbers "core\clientValidator.sqf";
 enableSentences false;
 
+// Initialize configuration variables
 diag_log "[Life Client] Initialization Variables";
 [] call compile preprocessFileLineNumbers "core\configuration.sqf";
 diag_log "[Life Client] Variables initialized";
 
+// Setup event handlers
 diag_log "[Life Client] Setting up Eventhandlers";
 [] call life_fnc_setupEVH;
 diag_log "[Life Client] Eventhandlers completed";
 
+// Setup user actions
 diag_log "[Life Client] Setting up user actions";
 [] call life_fnc_setupActions;
 diag_log "[Life Client] User actions completed";
 
+// Wait for the server to be ready
 diag_log "[Life Client] Waiting for the server to be ready...";
 waitUntil {!isNil "life_server_isReady" && {!isNil "life_server_extDB_notLoaded"}};
 
+// Exit if extDB is not loaded
 if (life_server_extDB_notLoaded) exitWith {
-    0 cutText [localize "STR_Init_ExtdbFail","BLACK FADED",99999999];
+    0 cutText [localize "STR_Init_ExtdbFail", "BLACK FADED", 99999999];
 };
 
+// Wait for the server to finish loading
 waitUntil {life_server_isReady};
 diag_log "[Life Client] Server loading completed ";
-0 cutText [localize "STR_Init_ServerReady","BLACK FADED",99999999];
+0 cutText [localize "STR_Init_ServerReady", "BLACK FADED", 99999999];
 
+// Perform data query to the server
 [] call SOCK_fnc_dataQuery;
 waitUntil {life_session_completed};
-0 cutText[localize "STR_Init_ClientFinish","BLACK FADED",99999999];
+0 cutText [localize "STR_Init_ClientFinish", "BLACK FADED", 99999999];
 
+// Initialize player based on side
 switch (playerSide) do {
     case west: {
         [] call life_fnc_initCop;
@@ -56,62 +71,72 @@ switch (playerSide) do {
         [] call life_fnc_initMedic;
     };
 };
+
+// Additional player settings
 CONSTVAR(life_paycheck);
 
+// Set initial player variables
 player setVariable ["restrained", false, true];
 player setVariable ["Escorting", false, true];
 player setVariable ["transporting", false, true];
 player setVariable ["playerSurrender", false, true];
 player setVariable ["realname", profileName, true];
 
+// Additional logging
 diag_log "[Life Client] Past Settings Init";
 
+// Key handling
 (findDisplay 46) displayAddEventHandler ["KeyDown", "_this call life_fnc_keyHandler"];
 [player, life_settings_enableSidechannel, playerSide] remoteExecCall ["TON_fnc_manageSC", RSERV];
 
+// Spawn survival functions
 [] spawn life_fnc_survival;
 
-0 cutText ["","BLACK IN"];
+// Display message
+0 cutText ["", "BLACK IN"];
 
-if (profileNamespace getVariable ["life_settings_revealObjects",true]) then {
+// Enable player tags and reveal objects if configured
+if (profileNamespace getVariable ["life_settings_revealObjects", true]) then {
     LIFE_ID_PlayerTags = addMissionEventHandler ["EachFrame", life_fnc_playerTags];
 };
-if (profileNamespace getVariable ["life_settings_revealObjects",true]) then {
+if (profileNamespace getVariable ["life_settings_revealObjects", true]) then {
     LIFE_ID_RevealObjects = addMissionEventHandler ["EachFrame", life_fnc_revealObjects];
 };
 
-if (LIFE_SETTINGS(getNumber,"enable_fatigue") isEqualTo 0) then {player enableFatigue false;};
-if (LIFE_SETTINGS(getNumber,"pump_service") isEqualTo 1) then {
+// Disable fatigue if configured
+if (LIFE_SETTINGS(getNumber, "enable_fatigue") isEqualTo 0) then {player enableFatigue false;};
+
+// Setup pump service if configured
+if (LIFE_SETTINGS(getNumber, "pump_service") isEqualTo 1) then {
     [] execVM "fn_setupStationService.sqf";
 };
 
+// Request client ID from the server
 life_fnc_RequestClientId = player;
 publicVariableServer "life_fnc_RequestClientId";
 
-/*
-    https://feedback.bistudio.com/T117205 - disableChannels settings cease to work when leaving/rejoining mission
-    Universal workaround for usage in a preInit function. - AgentRev
-    Remove if Bohemia actually fixes the issue.
-*/
+// Disable unnecessary channels (workaround)
 {
-    _x params [["_chan",-1,[0]], ["_noText","false",[""]], ["_noVoice","false",[""]]];
+    _x params [["_chan", -1, [0]], ["_noText", "false", [""]], ["_noVoice", "false", [""]]];
 
-    _noText = [false,true] select ((["false","true"] find toLower _noText) max 0);
-    _noVoice = [false,true] select ((["false","true"] find toLower _noVoice) max 0);
+    _noText = [false, true] select ((["false", "true"] find toLower _noText) max 0);
+    _noVoice = [false, true] select ((["false", "true"] find toLower _noVoice) max 0);
 
     _chan enableChannel [!_noText, !_noVoice];
 
 } forEach getArray (missionConfigFile >> "disableChannels");
 
+// Update wanted profile (remote execution)
 if (life_HC_isActive) then {
     [getPlayerUID player, player getVariable ["realname", name player]] remoteExec ["HC_fnc_wantedProfUpdate", HC_Life];
 } else {
     [getPlayerUID player, player getVariable ["realname", name player]] remoteExec ["life_fnc_wantedProfUpdate", RSERV];
 };
 
+// Update HUD and initialize permissions
 [] call life_fnc_hudUpdate;
 [] spawn cat_perm_fnc_initPerm;
 
-diag_log "----------------------------------------------------------------------------------------------------";
-diag_log format ["               End of Altis Life Client Init :: Total Execution Time %1 seconds ",(diag_tickTime - _timeStamp)];
-diag_log "----------------------------------------------------------------------------------------------------";
+// Final logging
+diag_log "-------------------------------------------- End of Altis Life Client Init ---------------------------------------------";
+diag_log format ["End of Altis Life Client Init :: Total Execution Time %1 seconds ", (diag_tickTime - _timeStamp)];

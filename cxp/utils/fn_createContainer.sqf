@@ -17,9 +17,11 @@ params [
 	["_containerGroup", controlNull, [controlNull]]
 ];
 
+// Überprüft, ob ein Display und ein Ressourcenname übergeben wurden
 if (isNull _containerDisplay) exitWith {diag_log "[CXP-UTILS] ERROR: YOU NEED TO PASS A DISPLAY TO CREATE A NEW CONTAINER !!!"};
 if (_resourceName isEqualTo "") exitWith {diag_log "[CXP-UTILS] ERROR: YOU NEED TO PASS A RESOURCE NAME TO CREATE A NEW CONTAINER !!!"};
 
+// Erstellt einen Container basierend auf den Parametern
 private "_container";
 if (isNull _containerGroup) then {
 	_container = _containerDisplay ctrlCreate [_resourceName, _idc];

@@ -1,4 +1,5 @@
 #include "..\script_macros.hpp"
+
 /*
     File: fn_initCiv.sqf
     Author: Bryan "Tonic" Boardwine
@@ -6,32 +7,51 @@
     Description:
     Initializes the civilian.
 */
+
+// Erstelle ein Array für Gebäude, die in WL_Rosche liegen
 private _wl_roscheArray = [];
 private _spawnBuildings = [[["WL_Rosche", _wl_roscheArray]]] call life_util_fnc_terrainSort;
 
-civ_spawn_1 = nearestObjects[getMarkerPos  "civ_spawn_rosch", _spawnBuildings,350];
-civ_spawn_2 = nearestObjects[getMarkerPos  "civ_spawn_stock", _spawnBuildings,350];
+// Finde die nächstgelegenen Gebäude zu den Spawnpunkten
+civ_spawn_1 = nearestObjects[getMarkerPos "civ_spawn_rosch", _spawnBuildings, 350];
+civ_spawn_2 = nearestObjects[getMarkerPos "civ_spawn_stock", _spawnBuildings, 350];
 
-waitUntil {!(isNull (findDisplay 46))};
-life_paycheck = LIFE_SETTINGS(getNumber,"paycheck_civ");
+// Warte, bis das HUD geladen ist
+waitUntil { !(isNull (findDisplay 46)) };
+
+// Einstellungen für das Gehalt
+life_paycheck = LIFE_SETTINGS(getNumber, "paycheck_civ");
+
+// Überprüfe, ob der Spieler lebendig ist und nicht verhaftet wurde
 if (life_is_alive && !life_is_arrested) then {
-    /* Spawn at our last position */
+    /* Spawn an unserer letzten Position */
     player setVehiclePosition [life_civ_position, [], 0, "CAN_COLLIDE"];
 } else {
+    // Überprüfe, ob der Spieler nicht lebendig und nicht verhaftet ist
     if (!life_is_alive && !life_is_arrested) then {
-        if (LIFE_SETTINGS(getNumber,"save_civilian_positionStrict") isEqualTo 1) then {
+        // Wenn "save_civilian_positionStrict" auf 1 gesetzt ist
+        if (LIFE_SETTINGS(getNumber, "save_civilian_positionStrict") isEqualTo 1) then {
             [] call life_fnc_startLoadout;
             CASH = 0;
             [0] call SOCK_fnc_updatePartial;
         };
+
+        // Öffne das Spawn-Menü für den Zivilisten
         [] call cat_spawn_fnc_spawnMenu;
-        waitUntil{!isNull (findDisplay 38500)}; //Wait for the spawn selection to be open.
-        waitUntil{isNull (findDisplay 38500)}; //Wait for the spawn selection to be done.
+
+        // Warte, bis das Spawn-Auswahlmenü geöffnet ist
+        waitUntil { !isNull (findDisplay 38500) };
+
+        // Warte, bis das Spawn-Auswahlmenü geschlossen ist
+        waitUntil { isNull (findDisplay 38500) };
     } else {
+        // Wenn der Spieler verhaftet wurde
         if (life_is_arrested) then {
             life_is_arrested = false;
-            [player,true] spawn life_fnc_jail;
+            [player, true] spawn life_fnc_jail;
         };
     };
 };
+
+// Setze den Status des Spielers auf "lebendig"
 life_is_alive = true;

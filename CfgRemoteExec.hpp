@@ -1,7 +1,9 @@
-#define F(NAME,TARGET) class NAME { \
+// RemoteExec-Makros
+#define F(NAME, TARGET) class NAME { \
     allowedTargets = TARGET; \
 };
-#define JIP(NAME,TARGET) class NAME { \
+
+#define JIP(NAME, TARGET) class NAME { \
     allowedTargets = TARGET; \
     jip = 1; \
 };
@@ -55,174 +57,175 @@ class CfgRemoteExec {
         class cat_trade_fnc_editServerHC {allowedTargets=HC_Life;};
 
 
-        /* Client only functions */
-        F(life_fnc_AAN,CLIENT)
-        F(life_fnc_addVehicle2Chain,CLIENT)
-        F(life_fnc_adminID,CLIENT)
-        F(life_fnc_adminInfo,CLIENT)
-        F(life_fnc_bountyReceive,CLIENT)
-        JIP(life_fnc_copLights,CLIENT)
-        F(life_fnc_copSearch,CLIENT)
-        JIP(life_fnc_copSiren,CLIENT)
-        F(life_fnc_freezePlayer,CLIENT)
-        F(life_fnc_gangCreated,CLIENT)
-        F(life_fnc_gangDisbanded,CLIENT)
-        F(life_fnc_gangInvite,CLIENT)
-        F(life_fnc_garageRefund,CLIENT)
-        F(life_fnc_giveDiff,CLIENT)
-        F(life_fnc_hideObj,CLIENT)
-        F(life_fnc_impoundMenu,CLIENT)
-        F(life_fnc_jail,CLIENT)
-        F(life_fnc_jailMe,CLIENT)
-        F(life_fnc_knockedOut,CLIENT)
-        F(life_fnc_licenseCheck,CLIENT)
-        F(life_fnc_licensesRead,CLIENT)
-        F(life_fnc_lightHouse,CLIENT)
-        JIP(life_fnc_mediclights,CLIENT)
-        F(life_fnc_medicRequest,CLIENT)
-        JIP(life_fnc_medicSiren,CLIENT)
-        F(life_fnc_moveIn,CLIENT)
-        F(life_fnc_pickupItem,CLIENT)
-        F(life_fnc_pickupMoney,CLIENT)
-        F(life_fnc_receiveItem,CLIENT)
-        F(life_fnc_receiveMoney,CLIENT)
-        F(life_fnc_removeLicenses,CLIENT)
-        F(life_fnc_restrain,CLIENT)
-        F(life_fnc_revived,CLIENT)
-        F(life_fnc_robPerson,CLIENT)
-        F(life_fnc_robReceive,CLIENT)
-        F(life_fnc_searchClient,CLIENT)
-        F(life_fnc_seizeClient,CLIENT)
-        F(life_fnc_soundDevice,CLIENT)
-        F(life_fnc_spikeStripEffect,CLIENT)
-        F(life_fnc_tazeSound,CLIENT)
-        F(life_fnc_ticketPaid,CLIENT)
-        F(life_fnc_ticketPrompt,CLIENT)
-        F(life_fnc_vehicleAnimate,CLIENT)
-        F(life_fnc_wantedList,CLIENT)
-        F(life_fnc_wireTransfer,CLIENT)
-        F(life_fnc_gangBankResponse,CLIENT)
-        F(life_fnc_chopShopSold,CLIENT)
-        F(SOCK_fnc_dataQuery,CLIENT)
-        F(SOCK_fnc_insertPlayerInfo,CLIENT)
-        F(SOCK_fnc_requestReceived,CLIENT)
-        F(SOCK_fnc_updateRequest,CLIENT)
-        F(life_fnc_clientGangKick,CLIENT)
-        JIP(life_fnc_clientGangLeader,CLIENT)
-        F(life_fnc_clientGangLeft,CLIENT)
-        F(life_fnc_clientGetKey,CLIENT)
-        F(life_fnc_clientMessage,CLIENT)
-        F(life_util_fnc_playerQuery,CLIENT)
+    /* Client only functions */
+    class life_fnc_AAN {allowedTargets=CLIENT;};
+    class life_fnc_addVehicle2Chain {allowedTargets=CLIENT;};
+    class life_fnc_adminID {allowedTargets=CLIENT;};
+    class life_fnc_adminInfo {allowedTargets=CLIENT;};
+    class life_fnc_bountyReceive {allowedTargets=CLIENT;};
+    class life_fnc_emergencySiren {allowedTargets=CLIENT; jip = 1;};
+    class life_fnc_vehicleLights {allowedTargets=CLIENT: jip=1;};
+    class life_fnc_copSearch {allowedTargets=CLIENT;};
+    class life_fnc_freezePlayer {allowedTargets=CLIENT;};
+    class life_fnc_gangCreated {allowedTargets=CLIENT;};
+    class life_fnc_gangDisbanded {allowedTargets=CLIENT;};
+    class life_fnc_gangInvite {allowedTargets=CLIENT;};
+    class life_fnc_garageRefund {allowedTargets=CLIENT;};
+    class life_fnc_giveDiff {allowedTargets=CLIENT;};
+    class life_fnc_hideObj {allowedTargets=CLIENT;};
+    class life_fnc_impoundMenu {allowedTargets=CLIENT;};
+    class life_fnc_jail {allowedTargets=CLIENT;};
+    class life_fnc_jailMe {allowedTargets=CLIENT;};
+    class life_fnc_knockedOut {allowedTargets=CLIENT;};
+    class life_fnc_licenseCheck {allowedTargets=CLIENT;};
+    class life_fnc_licensesRead {allowedTargets=CLIENT;};
+    class life_fnc_lightHouse {allowedTargets=CLIENT;};
+    class life_fnc_medicRequest {allowedTargets=CLIENT;};
+    class life_fnc_moveIn {allowedTargets=CLIENT;};
+    class life_fnc_pickupItem {allowedTargets=CLIENT;};
+    class life_fnc_pickupMoney {allowedTargets=CLIENT;};
+    class life_fnc_receiveItem {allowedTargets=CLIENT;};
+    class life_fnc_receiveMoney {allowedTargets=CLIENT;};
+    class life_fnc_removeLicenses {allowedTargets=CLIENT;};
+    class life_fnc_restrain {allowedTargets=CLIENT;};
+    class life_fnc_revived {allowedTargets=CLIENT;};
+    class life_fnc_robPerson {allowedTargets=CLIENT;};
+    class life_fnc_robReceive {allowedTargets=CLIENT;};
+    class life_fnc_searchClient {allowedTargets=CLIENT;};
+    class life_fnc_seizeClient {allowedTargets=CLIENT;};
+    class life_fnc_soundDevice {allowedTargets=CLIENT;};
+    class life_fnc_spikeStripEffect {allowedTargets=CLIENT;};
+    class life_fnc_tazeSound {allowedTargets=CLIENT;};
+    class life_fnc_ticketPaid {allowedTargets=CLIENT;};
+    class life_fnc_ticketPrompt {allowedTargets=CLIENT;};
+    class life_fnc_vehicleAnimate {allowedTargets=CLIENT;};
+    class life_fnc_wantedList {allowedTargets=CLIENT;};
+    class life_fnc_wireTransfer {allowedTargets=CLIENT;};
+    class life_fnc_gangBankResponse {allowedTargets=CLIENT;};
+    class life_fnc_chopShopSold {allowedTargets=CLIENT;};
+    class SOCK_fnc_dataQuery {allowedTargets=CLIENT;};
+    class SOCK_fnc_insertPlayerInfo {allowedTargets=CLIENT;};
+    class SOCK_fnc_requestReceived {allowedTargets=CLIENT;};
+    class SOCK_fnc_updateRequest {allowedTargets=CLIENT;};
+    class life_fnc_clientGangKick {allowedTargets=CLIENT;};
+    class life_fnc_clientGangLeader {allowedTargets=CLIENT; jip = 1;};
+    class life_fnc_clientGangLeft {allowedTargets=CLIENT;};
+    class life_fnc_clientGetKey {allowedTargets=CLIENT;};
+    class life_fnc_clientMessage {allowedTargets=CLIENT;};
+    class life_util_fnc_playerQuery {allowedTargets=CLIENT;};
 
-        /* Server only functions */
-        F(DB_fnc_insertRequest,SERVER)
-        F(DB_fnc_queryRequest,SERVER)
-        F(DB_fnc_updatePartial,SERVER)
-        F(DB_fnc_updateRequest,SERVER)
-        F(life_fnc_jailSys,SERVER)
-        F(life_fnc_wantedAdd,SERVER)
-        F(life_fnc_wantedBounty,SERVER)
-        F(life_fnc_wantedCrimes,SERVER)
-        F(life_fnc_wantedFetch,SERVER)
-        F(life_fnc_wantedProfUpdate,SERVER)
-        F(life_fnc_wantedRemove,SERVER)
-        F(SPY_fnc_cookieJar,SERVER)
-        F(SPY_fnc_observe,SERVER)
-        F(TON_fnc_addContainer,SERVER)
-        F(TON_fnc_addHouse,SERVER)
-        F(TON_fnc_chopShopSell,SERVER)
-        F(TON_fnc_cleanupRequest,SERVER)
-        F(TON_fnc_deleteDBContainer,SERVER)
-        F(TON_fnc_getID,SERVER)
-        F(TON_fnc_getVehicles,SERVER)
-        F(TON_fnc_insertGang,SERVER)
-        F(TON_fnc_keyManagement,SERVER)
-        F(TON_fnc_manageSC,SERVER)
-        F(TON_fnc_pickupAction,SERVER)
-        F(TON_fnc_removeGang,SERVER)
-        F(TON_fnc_sellHouse,SERVER)
-        F(TON_fnc_sellHouseContainer,SERVER)
-        F(TON_fnc_spawnVehicle,SERVER)
-        F(TON_fnc_spikeStrip,SERVER)
-        F(TON_fnc_updateGang,SERVER)
-        F(TON_fnc_updateHouseContainers,SERVER)
-        F(TON_fnc_updateHouseTrunk,SERVER)
-        F(TON_fnc_vehicleCreate,SERVER)
-        F(TON_fnc_vehicleDelete,SERVER)
-        F(TON_fnc_vehicleStore,SERVER)
-        F(TON_fnc_vehicleUpdate,SERVER)
-        F(TON_fnc_handleBlastingCharge,SERVER)
-        F(TON_fnc_houseGarage,SERVER)
+    /* Server only functions */
+    class DB_fnc_insertRequest {allowedTargets=SERVER;};
+    class DB_fnc_queryRequest {allowedTargets=SERVER;};
+    class DB_fnc_updatePartial {allowedTargets=SERVER;};
+    class DB_fnc_updateRequest {allowedTargets=SERVER;};
+    class life_fnc_jailSys {allowedTargets=SERVER;};
+    class life_fnc_wantedAdd {allowedTargets=SERVER;};
+    class life_fnc_wantedBounty {allowedTargets=SERVER;};
+    class life_fnc_wantedCrimes {allowedTargets=SERVER;};
+    class life_fnc_wantedFetch {allowedTargets=SERVER;};
+    class life_fnc_wantedProfUpdate {allowedTargets=SERVER;};
+    class life_fnc_wantedRemove {allowedTargets=SERVER;};
+    class SPY_fnc_cookieJar {allowedTargets=SERVER;};
+    class SPY_fnc_observe {allowedTargets=SERVER;};
+    class TON_fnc_addContainer {allowedTargets=SERVER;};
+    class TON_fnc_addHouse {allowedTargets=SERVER;};
+    class TON_fnc_chopShopSell {allowedTargets=SERVER;};
+    class TON_fnc_cleanupRequest {allowedTargets=SERVER;};
+    class TON_fnc_deleteDBContainer {allowedTargets=SERVER;};
+    class TON_fnc_getID {allowedTargets=SERVER;};
+    class TON_fnc_getVehicles {allowedTargets=SERVER;};
+    class TON_fnc_insertGang {allowedTargets=SERVER;};
+    class TON_fnc_keyManagement {allowedTargets=SERVER;};
+    class TON_fnc_manageSC {allowedTargets=SERVER;};
+    class TON_fnc_pickupAction {allowedTargets=SERVER;};
+    class TON_fnc_removeGang {allowedTargets=SERVER;};
+    class TON_fnc_sellHouse {allowedTargets=SERVER;};
+    class TON_fnc_sellHouseContainer {allowedTargets=SERVER;};
+    class TON_fnc_spawnVehicle {allowedTargets=SERVER;};
+    class TON_fnc_spikeStrip {allowedTargets=SERVER;};
+    class TON_fnc_updateGang {allowedTargets=SERVER;};
+    class TON_fnc_updateHouseContainers {allowedTargets=SERVER;};
+    class TON_fnc_updateHouseTrunk {allowedTargets=SERVER;};
+    class TON_fnc_vehicleCreate {allowedTargets=SERVER;};
+    class TON_fnc_vehicleDelete {allowedTargets=SERVER;};
+    class TON_fnc_vehicleStore {allowedTargets=SERVER;};
+    class TON_fnc_vehicleUpdate {allowedTargets=SERVER;};
+    class TON_fnc_handleBlastingCharge {allowedTargets=SERVER;};
+    class TON_fnc_houseGarage {allowedTargets=SERVER;};
 
-        /* HeadlessClient only functions */
-        F(HC_fnc_addContainer,HC)
-        F(HC_fnc_addHouse,HC)
-        F(HC_fnc_chopShopSell,HC)
-        F(HC_fnc_deleteDBContainer,HC)
-        F(HC_fnc_getVehicles,HC)
-        F(HC_fnc_houseGarage,HC)
-        F(HC_fnc_insertGang,HC)
-        F(HC_fnc_insertRequest,HC)
-        F(HC_fnc_insertVehicle,HC)
-        F(HC_fnc_jailSys,HC)
-        F(HC_fnc_keyManagement,HC)
-        F(HC_fnc_queryRequest,HC)
-        F(HC_fnc_removeGang,HC)
-        F(HC_fnc_sellHouse,HC)
-        F(HC_fnc_sellHouseContainer,HC)
-        F(HC_fnc_spawnVehicle,HC)
-        F(HC_fnc_spikeStrip,HC)
-        F(HC_fnc_updateGang,HC)
-        F(HC_fnc_updateHouseContainers,HC)
-        F(HC_fnc_updateHouseTrunk,HC)
-        F(HC_fnc_updatePartial,HC)
-        F(HC_fnc_updateRequest,HC)
-        F(HC_fnc_vehicleCreate,HC)
-        F(HC_fnc_vehicleDelete,HC)
-        F(HC_fnc_vehicleStore,HC)
-        F(HC_fnc_vehicleUpdate,HC)
-        F(HC_fnc_wantedAdd,HC)
-        F(HC_fnc_wantedBounty,HC)
-        F(HC_fnc_wantedCrimes,HC)
-        F(HC_fnc_wantedFetch,HC)
-        F(HC_fnc_wantedProfUpdate,HC)
-        F(HC_fnc_wantedRemove,HC)
+    /* HeadlessClient only functions */
+    class HC_fnc_addContainer {allowedTargets=HC;};
+    class HC_fnc_addHouse {allowedTargets=HC;};
+    class HC_fnc_chopShopSell {allowedTargets=HC;};
+    class HC_fnc_deleteDBContainer {allowedTargets=HC;};
+    class HC_fnc_getVehicles {allowedTargets=HC;};
+    class HC_fnc_houseGarage {allowedTargets=HC;};
+    class HC_fnc_insertGang {allowedTargets=HC;};
+    class HC_fnc_insertRequest {allowedTargets=HC;};
+    class HC_fnc_insertVehicle {allowedTargets=HC;};
+    class HC_fnc_jailSys {allowedTargets=HC;};
+    class HC_fnc_keyManagement {allowedTargets=HC;};
+    class HC_fnc_queryRequest {allowedTargets=HC;};
+    class HC_fnc_removeGang {allowedTargets=HC;};
+    class HC_fnc_sellHouse {allowedTargets=HC;};
+    class HC_fnc_sellHouseContainer {allowedTargets=HC;};
+    class HC_fnc_spawnVehicle {allowedTargets=HC;};
+    class HC_fnc_spikeStrip {allowedTargets=HC;};
+    class HC_fnc_updateGang {allowedTargets=HC;};
+    class HC_fnc_updateHouseContainers {allowedTargets=HC;};
+    class HC_fnc_updateHouseTrunk {allowedTargets=HC;};
+    class HC_fnc_updatePartial {allowedTargets=HC;};
+    class HC_fnc_updateRequest {allowedTargets=HC;};
+    class HC_fnc_vehicleCreate {allowedTargets=HC;};
+    class HC_fnc_vehicleDelete {allowedTargets=HC;};
+    class HC_fnc_vehicleStore {allowedTargets=HC;};
+    class HC_fnc_vehicleUpdate {allowedTargets=HC;};
+    class HC_fnc_wantedAdd {allowedTargets=HC;};
+    class HC_fnc_wantedBounty {allowedTargets=HC;};
+    class HC_fnc_wantedCrimes {allowedTargets=HC;};
+    class HC_fnc_wantedFetch {allowedTargets=HC;};
+    class HC_fnc_wantedProfUpdate {allowedTargets=HC;};
+    class HC_fnc_wantedRemove {allowedTargets=HC;};
 
-        /* Functions for everyone */
-        F(BIS_fnc_effectKilledAirDestruction,ANYONE)
-        F(BIS_fnc_effectKilledSecondaries,ANYONE)
-        F(life_fnc_animSync,ANYONE)
-        F(life_fnc_broadcast,ANYONE)
-        F(life_fnc_colorVehicle,ANYONE)
-        F(life_fnc_corpse,ANYONE)
-        F(life_fnc_demoChargeTimer,ANYONE)
-        F(life_fnc_flashbang,ANYONE)
-        F(life_fnc_jumpFnc,ANYONE)
-        F(life_fnc_lockVehicle,ANYONE)
-        F(life_fnc_pulloutVeh,ANYONE)
-        F(life_fnc_say3D,ANYONE)
-        F(life_fnc_setFuel,ANYONE)
-        F(life_fnc_simDisable,ANYONE)
-        F(life_fnc_initACE,ANYONE) // ACE API
-        F(life_fnc_openGarage,ANYONE) // ACE Garage Dialog
+    /* Functions for everyone */
+    class BIS_fnc_effectKilledAirDestruction {allowedTargets=ANYONE;};
+    class BIS_fnc_effectKilledSecondaries {allowedTargets=ANYONE;};
+    class life_fnc_animSync {allowedTargets=ANYONE;};
+    class life_fnc_broadcast {allowedTargets=ANYONE;};
+    class life_fnc_colorVehicle {allowedTargets=ANYONE;};
+    class life_fnc_corpse {allowedTargets=ANYONE;};
+    class life_fnc_demoChargeTimer {allowedTargets=ANYONE;};
+    class life_fnc_flashbang {allowedTargets=ANYONE;};
+    class life_fnc_jumpFnc {allowedTargets=ANYONE;};
+    class life_fnc_lockVehicle {allowedTargets=ANYONE;};
+    class life_fnc_pulloutVeh {allowedTargets=ANYONE;};
+    class life_fnc_say3D {allowedTargets=ANYONE;};
+    class life_fnc_setFuel {allowedTargets=ANYONE;};
+    class life_fnc_simDisable {allowedTargets=ANYONE;};
+    class life_fnc_initACE {allowedTargets=ANYONE;}; // ACE API
+    class life_fnc_openGarage {allowedTargets=ANYONE;}; // ACE Garage Dialog
+
     };
 
     class Commands {
         mode = 1;
         jip = 1;
 
-        F(execVM,SERVER)
-        F(enableSimulationGlobal,SERVER)
-        F(setObjectTexture,ANYONE)
-        F(setObjectTextureGlobal,ANYONE)
-        F(setObjectMaterial,ANYONE)
-        F(setObjectMaterialGlobal,ANYONE)
-        F(playMove,ANYONE) // KKA A3 Animationen
-		F(switchMove,ANYONE) // KKA A3 Animationen
-        F(addHandgunItem,ANYONE)
-        F(addMagazine,ANYONE)
-        F(addPrimaryWeaponItem,ANYONE)
-        F(addWeapon,ANYONE)
-        F(setFuel,ANYONE)
+    /* Commands */
+    class execVM {allowedTargets=SERVER;};
+    class enableSimulationGlobal {allowedTargets=SERVER;};
+    class setObjectTexture {allowedTargets=ANYONE;};
+    class setObjectTextureGlobal {allowedTargets=ANYONE;};
+    class setObjectMaterial {allowedTargets=ANYONE;};
+    class setObjectMaterialGlobal {allowedTargets=ANYONE;};
+    class playMove {allowedTargets=ANYONE;}; // KKA A3 Animationen
+    class switchMove {allowedTargets=ANYONE;}; // KKA A3 Animationen
+    class addHandgunItem {allowedTargets=ANYONE;};
+    class addMagazine {allowedTargets=ANYONE;};
+    class addPrimaryWeaponItem {allowedTargets=ANYONE;};
+    class addWeapon {allowedTargets=ANYONE;};
+    class setFuel {allowedTargets=ANYONE;};
+
     };
 };
