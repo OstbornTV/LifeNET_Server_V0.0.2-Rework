@@ -24,7 +24,7 @@ class Header
 onLoadName = "LifeNET RPG";
 onLoadMission 	= "Weiterentwickelt vom LifeNET Team";
 author = "LifeNET RPG - Team";
-loadScreen = "\LifeNET_Skins\istdasnocharma.jpg";
+loadScreen = "\LifeNET_Textures\istdasnocharma.jpg";
 
 enableTeamSwitch = 0;
 
@@ -55,7 +55,7 @@ class CfgServer {
 };
 
 #include "dialog\masterhandler.hpp"
-#include "config\config_master.hpp"
+#include "config\Config_Master.hpp"
 #include "cxp\cxp_cfgs.cpp"
 #include "cxp\cxp_dialogs.cpp"
 

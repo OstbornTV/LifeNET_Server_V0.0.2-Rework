@@ -154,7 +154,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_pickaxe.paa";
+        icon = "\LifeNET_Textures\icons\ico_pickaxe.paa";
     };
  // Neu //
     class schaufel {
@@ -166,7 +166,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons3\ico_schaufel.paa";
+        icon = "\LifeNET_Textures\icons3\ico_schaufel.paa";
     };
 
  // Alte //
@@ -179,7 +179,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_defibrillator.paa";
+        icon = "\LifeNET_Textures\icons\ico_defibrillator.paa";
     };
 
     class toolkit {
@@ -203,7 +203,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_fuelEmpty.paa";
+        icon = "\LifeNET_Textures\icons\ico_fuelEmpty.paa";
     };
 
     class fuelFull {
@@ -215,7 +215,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_fuel.paa";
+        icon = "\LifeNET_Textures\icons\ico_fuel.paa";
     };
 
     class spikeStrip {
@@ -227,7 +227,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_spikeStrip.paa";
+        icon = "\LifeNET_Textures\icons\ico_spikeStrip.paa";
     };
 
     class lockpick {
@@ -240,7 +240,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_lockpick.paa";
+        icon = "\LifeNET_Textures\icons\ico_lockpick.paa";
     };
 
     class goldbar {
@@ -252,7 +252,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_goldBar.paa";
+        icon = "\LifeNET_Textures\icons\ico_goldBar.paa";
     };
 
     class blastingcharge {
@@ -264,7 +264,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_blastingCharge.paa";
+        icon = "\LifeNET_Textures\icons\ico_blastingCharge.paa";
     };
 
     class boltcutter {
@@ -276,7 +276,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_boltCutter.paa";
+        icon = "\LifeNET_Textures\icons\ico_boltCutter.paa";
     };
 
     class defusekit {
@@ -288,7 +288,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_defuseKit.paa";
+        icon = "\LifeNET_Textures\icons\ico_defuseKit.paa";
     };
 
     class storagesmall {
@@ -300,7 +300,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_storageSmall.paa";
+        icon = "\LifeNET_Textures\icons\ico_storageSmall.paa";
     };
 
     class storagebig {
@@ -312,7 +312,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_storageBig.paa";
+        icon = "\LifeNET_Textures\icons\ico_storageBig.paa";
     };
 
     class rubbellos {
@@ -324,7 +324,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons2\ico_rubbellos.paa";
+        icon = "\LifeNET_Textures\icons2\ico_rubbellos.paa";
     };
     //Mined Items
     class oil {
@@ -337,7 +337,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_oil.paa";
+        icon = "\LifeNET_Textures\icons\ico_oil.paa";
         liquid = true;
     };
     // Neue sachen //
@@ -351,7 +351,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_weizen.paa";
+        icon = "\LifeNET_Textures\icons\ico_weizen.paa";
         liquid = false;
     };
 
@@ -365,7 +365,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_mehl.paa";
+        icon = "\LifeNET_Textures\icons\ico_mehl.paa";
         liquid = false;
     };
 
@@ -393,7 +393,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_kautschuk.paa";
+        icon = "\LifeNET_Textures\icons\ico_kautschuk.paa";
         liquid = false;
     };
 
@@ -421,7 +421,7 @@ class VirtualItems {
         drinkable = -1;
         hasLicense = false;
         illegal = false;
-        icon = "\LifeNET_Skins\icons\ico_plastik.paa";
+        icon = "\LifeNET_Textures\icons\ico_plastik.paa";
         liquid = true;
     };
 
@@ -488,7 +488,7 @@ class VirtualItems {
         edible = -1;
         drinkable = -1;
         hasLicense = false;
-        icon = "\LifeNET_Skins\icons\ico_faerbemittel.paa";
+        icon = "\LifeNET_Textures\icons\ico_faerbemittel.paa";
         illegal = false;
         liquid = true;
     };
@@ -502,7 +502,7 @@ class VirtualItems {
         edible = -1;
         drinkable = -1;
         hasLicense = false;
-        icon = "\LifeNET_Skins\icons\ico_reifen.paa";
+        icon = "\LifeNET_Textures\icons\ico_reifen.paa";
         illegal = false;
         liquid = false;
     };
@@ -531,7 +531,7 @@ class VirtualItems {
         edible = -1;
         drinkable = -1;
         hasLicense = false;
-        icon = "\LifeNET_Skins\icons\ico_zucker.paa";
+        icon = "\LifeNET_Textures\icons\ico_zucker.paa";
         liquid = false;
 	};
 
@@ -560,7 +560,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_copperOre.paa";
+        icon = "\LifeNET_Textures\icons\ico_copperOre.paa";
         liquid = false;
     };
 
@@ -574,7 +574,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_copper.paa";
+        icon = "\LifeNET_Textures\icons\ico_copper.paa";
         liquid = false;
     };
 
@@ -588,7 +588,7 @@ class VirtualItems {
         hasLicense = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_ironOre.paa";
+        icon = "\LifeNET_Textures\icons\ico_ironOre.paa";
         liquid = false;
     };
 
@@ -602,7 +602,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_eisenbarren.paa";
+        icon = "\LifeNET_Textures\icons\ico_eisenbarren.paa";
         liquid = false;
     };
 
@@ -616,7 +616,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_saltUnprocessed.paa";
+        icon = "\LifeNET_Textures\icons\ico_saltUnprocessed.paa";
         liquid = false;
     };
 
@@ -630,7 +630,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_salz.paa";
+        icon = "\LifeNET_Textures\icons\ico_salz.paa";
         liquid = false;
     };
 
@@ -644,7 +644,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_sand.paa";
+        icon = "\LifeNET_Textures\icons\ico_sand.paa";
         liquid = false;
     };
 
@@ -658,7 +658,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_glass.paa";
+        icon = "\LifeNET_Textures\icons\ico_glass.paa";
         liquid = false;
     };
 
@@ -672,7 +672,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_diamondUncut.paa";
+        icon = "\LifeNET_Textures\icons\ico_diamondUncut.paa";
         liquid = false;
     };
 
@@ -686,7 +686,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_diamond.paa";
+        icon = "\LifeNET_Textures\icons\ico_diamond.paa";
         liquid = false;
     };
 
@@ -700,7 +700,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_stein.paa";
+        icon = "\LifeNET_Textures\icons\ico_stein.paa";
         liquid = false;
     };
 
@@ -714,7 +714,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_zement.paa";
+        icon = "\LifeNET_Textures\icons\ico_zement.paa";
         liquid = false;
     };
 
@@ -729,7 +729,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = true;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_heroin_u.paa";
+        icon = "\LifeNET_Textures\icons\ico_heroin_u.paa";
         processedItem = "heroin_processed";
         liquid = false;
     };
@@ -744,7 +744,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_heroin_p.paa";
+        icon = "\LifeNET_Textures\icons\ico_heroin_p.paa";
         liquid = false;
     };
 
@@ -758,7 +758,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = true;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cannabis.paa";
+        icon = "\LifeNET_Textures\icons\ico_cannabis.paa";
         processedItem = "marijuana";
         liquid = false;
     };
@@ -773,7 +773,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = true;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_marijuana.paa";
+        icon = "\LifeNET_Textures\icons\ico_marijuana.paa";
         liquid = false;
     };
 
@@ -787,7 +787,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = true;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cocaineUnprocessed.paa";
+        icon = "\LifeNET_Textures\icons\ico_cocaineUnprocessed.paa";
         processedItem = "cocaine_processed";
         liquid = false;
     };
@@ -802,7 +802,7 @@ class VirtualItems {
         edible = -1;
         hasLicense = false;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cocaineProcessed.paa";
+        icon = "\LifeNET_Textures\icons\ico_cocaineProcessed.paa";
         liquid = false;
     };
 
@@ -815,7 +815,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_lsd.paa";
+        icon = "\LifeNET_Textures\icons\ico_lsd.paa";
         liquid = false;
     };
 
@@ -828,7 +828,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_frosch.paa";
+        icon = "\LifeNET_Textures\icons\ico_frosch.paa";
         liquid = false;
     };
 
@@ -842,7 +842,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = 50;
-        icon = "\LifeNET_Skins\icons\ico_redgull.paa";
+        icon = "\LifeNET_Textures\icons\ico_redgull.paa";
     };
 
     class coffee {
@@ -854,7 +854,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = 100;
-        icon = "\LifeNET_Skins\icons\ico_coffee.paa";
+        icon = "\LifeNET_Textures\icons\ico_coffee.paa";
     };
 
     class waterBottle {
@@ -866,7 +866,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = 100;
-        icon = "\LifeNET_Skins\icons\ico_waterBottle.paa";
+        icon = "\LifeNET_Textures\icons\ico_waterBottle.paa";
     };
 
     //Food
@@ -879,7 +879,7 @@ class VirtualItems {
         illegal = false;
         edible = 10;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_apple.paa";
+        icon = "\LifeNET_Textures\icons\ico_apple.paa";
     };
 
     class peach {
@@ -891,7 +891,7 @@ class VirtualItems {
         illegal = false;
         edible = 10;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_peach.paa";
+        icon = "\LifeNET_Textures\icons\ico_peach.paa";
     };
 
     class tbacon {
@@ -903,7 +903,7 @@ class VirtualItems {
         illegal = false;
         edible = 40;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_tBacon.paa";
+        icon = "\LifeNET_Textures\icons\ico_tBacon.paa";
     };
 
     class donuts {
@@ -915,7 +915,7 @@ class VirtualItems {
         illegal = false;
         edible = 30;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_donuts.paa";
+        icon = "\LifeNET_Textures\icons\ico_donuts.paa";
     };
 
     class rabbit_raw {
@@ -927,7 +927,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_rabbitRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_rabbitRaw.paa";
     };
 
     class rabbit {
@@ -939,7 +939,7 @@ class VirtualItems {
         illegal = false;
         edible = 20;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_rabbit.paa";
+        icon = "\LifeNET_Textures\icons\ico_rabbit.paa";
     };
 
     class salema_raw {
@@ -951,7 +951,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_salemaRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_salemaRaw.paa";
     };
 
     class salema {
@@ -963,7 +963,7 @@ class VirtualItems {
         illegal = false;
         edible = 30;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cookedFish.paa";
+        icon = "\LifeNET_Textures\icons\ico_cookedFish.paa";
     };
 
     class ornate_raw {
@@ -975,7 +975,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_ornateRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_ornateRaw.paa";
     };
 
     class ornate {
@@ -987,7 +987,7 @@ class VirtualItems {
         illegal = false;
         edible = 25;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cookedFish.paa";
+        icon = "\LifeNET_Textures\icons\ico_cookedFish.paa";
     };
 
     class mackerel_raw {
@@ -999,7 +999,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_mackerelRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_mackerelRaw.paa";
     };
 
     class mackerel {
@@ -1011,7 +1011,7 @@ class VirtualItems {
         illegal = false;
         edible = 30;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cookedFish.paa";
+        icon = "\LifeNET_Textures\icons\ico_cookedFish.paa";
     };
 
     class tuna_raw {
@@ -1023,7 +1023,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_tunaRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_tunaRaw.paa";
     };
 
     class tuna {
@@ -1035,7 +1035,7 @@ class VirtualItems {
         illegal = false;
         edible = 100;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cookedFish.paa";
+        icon = "\LifeNET_Textures\icons\ico_cookedFish.paa";
     };
 
     class mullet_raw {
@@ -1047,7 +1047,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_mulletRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_mulletRaw.paa";
     };
 
     class mullet {
@@ -1059,7 +1059,7 @@ class VirtualItems {
         illegal = false;
         edible = 80;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cookedFish.paa";
+        icon = "\LifeNET_Textures\icons\ico_cookedFish.paa";
     };
 
     class catshark_raw {
@@ -1071,7 +1071,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_catsharkRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_catsharkRaw.paa";
     };
 
     class catshark {
@@ -1083,7 +1083,7 @@ class VirtualItems {
         illegal = false;
         edible = 100;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_cookedFish.paa";
+        icon = "\LifeNET_Textures\icons\ico_cookedFish.paa";
     };
 
     class turtle_raw {
@@ -1095,7 +1095,7 @@ class VirtualItems {
         illegal = true;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_turtleRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_turtleRaw.paa";
     };
 
     class turtle_soup {
@@ -1107,7 +1107,7 @@ class VirtualItems {
         illegal = false;
         edible = 100;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_turtleSoup.paa";
+        icon = "\LifeNET_Textures\icons\ico_turtleSoup.paa";
     };
 
     class hen_raw {
@@ -1119,7 +1119,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_wholeChickenRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_wholeChickenRaw.paa";
     };
 
     class hen {
@@ -1131,7 +1131,7 @@ class VirtualItems {
         illegal = false;
         edible = 65;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_wholeChicken.paa";
+        icon = "\LifeNET_Textures\icons\ico_wholeChicken.paa";
     };
 
     class rooster_raw {
@@ -1143,7 +1143,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_chickenDrumstickRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_chickenDrumstickRaw.paa";
     };
 
     class rooster {
@@ -1155,7 +1155,7 @@ class VirtualItems {
         illegal = false;
         edible = 45;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_chickenDrumstick.paa";
+        icon = "\LifeNET_Textures\icons\ico_chickenDrumstick.paa";
     };
 
     class sheep_raw {
@@ -1167,7 +1167,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_lambChopRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_lambChopRaw.paa";
     };
 
     class sheep {
@@ -1179,7 +1179,7 @@ class VirtualItems {
         illegal = false;
         edible = 100;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_lambChop.paa";
+        icon = "\LifeNET_Textures\icons\ico_lambChop.paa";
     };
 
     class goat_raw {
@@ -1191,7 +1191,7 @@ class VirtualItems {
         illegal = false;
         edible = -1;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_muttonLegRaw.paa";
+        icon = "\LifeNET_Textures\icons\ico_muttonLegRaw.paa";
     };
 
     class goat {
@@ -1203,6 +1203,6 @@ class VirtualItems {
         illegal = false;
         edible = 100;
         drinkable = -1;
-        icon = "\LifeNET_Skins\icons\ico_muttonLeg.paa";
+        icon = "\LifeNET_Textures\icons\ico_muttonLeg.paa";
     };
 };

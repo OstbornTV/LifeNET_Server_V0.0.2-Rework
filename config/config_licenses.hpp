@@ -6,7 +6,7 @@
 *        illegal = Illegal License
 *        side = side indicator
 */
-/*
+
 class LicensesShops {
     class LizenzAmt {
         name = "STR_MAR_Lizenzamt";
@@ -43,7 +43,7 @@ class LicensesShops {
         items[] = { "lsd", "moonshine_traube", "moonshine_kirsch", "cannabis", "kokain", "kokaingestreckt", "heroin", "schiesspulver", "rebel", "turtle", "schildkroetenpanzer"};
 	};
 };
-*/
+
 
 class Licenses {
     //Civilian Licenses
@@ -175,6 +175,7 @@ class Licenses {
         illegal = false;
         side = "civ";
     };
+
 // Neue Lizenzen
     class breezel {
         variable = "breezel";
@@ -247,6 +248,7 @@ class Licenses {
         illegal = false;
         side = "civ";
     };
+    
     //Illegal Licenses
     class cocaine {
         variable = "cocaine";

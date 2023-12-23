@@ -1,7 +1,7 @@
     class MedicalRequestEmerg 
     {
         title = "$STR_MedicalRequestEmerg_Title";
-        iconPicture = "\LifeNET_Skins\request\rdrequest.paa";
+        iconPicture = "\LifeNET_Textures\request\rdrequest.paa";
         description = "%1";
         duration = 5;
         priority = 7;
@@ -37,7 +37,7 @@
     class TextMessage 
     {
         title = "$STR_TextMessage_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messageNew.paa";
+        iconPicture = "\LifeNET_Textures\texturen\icons\ico_messageNew.paa";
         description = "%1";
         duration = 10;
         priority = 6;
@@ -46,7 +46,7 @@
     class PoliceDispatch 
     {
         title = "$STR_PoliceDispatch_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messagePolice.paa";
+        iconPicture = "\LifeNET_Textures\texturen\icons\ico_messagePolice.paa";
         description = "%1";
         duration = 10;
         priority = 6;
@@ -55,7 +55,7 @@
     class AdminDispatch 
     {
         title = "$STR_AdminDispatch_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messageAdmin.paa";
+        iconPicture = "\LifeNET_Textures\texturen\icons\ico_messageAdmin.paa";
         description = "%1";
         duration = 10;
         priority = 6;
@@ -64,7 +64,7 @@
     class AdminMessage 
     {
         title = "$STR_AdminMessage_Title";
-        iconPicture = "\LifeNET_Skins\texturen\icons\ico_messageAdmin.paa";
+        iconPicture = "\LifeNET_Textures\texturen\icons\ico_messageAdmin.paa";
         description = "%1";
         duration = 10;
         priority = 5;

@@ -59,4 +59,5 @@ crimes[] = {
     {"STR_Crime_23","5000","23"},
     {"STR_Crime_24","10000","24"},
     {"STR_Crime_25","20000","25"}
+    //More Crimes
 };

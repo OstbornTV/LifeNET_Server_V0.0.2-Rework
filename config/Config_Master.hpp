@@ -197,7 +197,7 @@ class Life_Settings {
 
 
     /* ! --- Do not change --- ! */
-    framework_version = "5.0.0";
+    framework_version = "LifeNET 0.0.2";
     /* ------------------------- */
 
 };
@@ -206,25 +206,26 @@ class Life_Settings {
 
 #include "Config_WantedCrimes.hpp"
 
-#include "config_clothing.hpp"
+#include "Config_Clothing.hpp"
 
-#include "config_licenses.hpp"
+#include "Config_Licenses.hpp"
 
-#include "config_vehicles.hpp"
+#include "Config_Vehicles.hpp"
 
-#include "config_vitems.hpp"
+#include "Config_Vitems.hpp"
 
-#include "config_weapons.hpp"
+#include "Config_Weapons.hpp"
 
-//#include "config_gather.hpp"
-#include "config_spawnpoints.hpp"
+#include "Config_Gather.hpp"
 
-#include "config_process.hpp"
+#include "Config_Spawnpoints.hpp"
 
-#include "config_housing.hpp"
+#include "Config_Process.hpp"
 
-#include "config_garages.hpp"
+#include "Config_Housing.hpp"
 
-#include "config_loadouts.hpp"
+#include "Config_Garages.hpp"
 
-#include "Config_disabledcommands.hpp"
+#include "Config_Loadouts.hpp"
+
+#include "Config_DisabledCommands.hpp"

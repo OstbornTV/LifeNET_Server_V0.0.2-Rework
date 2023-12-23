@@ -586,7 +586,7 @@ class LifeCfgVehicles {
 /*
     class Default { 
         vItemSpace = -1;
-        conditions = "license_civ_driver || {!(playerSide isEqualTo civilian)}";
+        conditions = "license_cop_driver || {!(playerSide isEqualTo west)}";
         price = -1;
         textures[] = { };
         storeLiquid = false;
@@ -594,7 +594,7 @@ class LifeCfgVehicles {
 
     class Default { 
         vItemSpace = -1;
-        conditions = "license_civ_driver || {!(playerSide isEqualTo civilian)}";
+        conditions = "license_cop_driver || {!(playerSide isEqualTo west)}";
         price = -1;
         textures[] = { };
         storeLiquid = false;
@@ -602,7 +602,7 @@ class LifeCfgVehicles {
 
     class Default { 
         vItemSpace = -1;
-        conditions = "license_civ_driver || {!(playerSide isEqualTo civilian)}";
+        conditions = "license_cop_driver || {!(playerSide isEqualTo west)}";
         price = -1;
         textures[] = { };
         storeLiquid = false;
@@ -610,7 +610,7 @@ class LifeCfgVehicles {
 
     class Default { 
         vItemSpace = -1;
-        conditions = "license_civ_driver || {!(playerSide isEqualTo civilian)}";
+        conditions = "license_cop_driver || {!(playerSide isEqualTo west)}";
         price = -1;
         textures[] = { };
         storeLiquid = false;
@@ -618,7 +618,7 @@ class LifeCfgVehicles {
 
     class Default { 
         vItemSpace = -1;
-        conditions = "license_civ_driver || {!(playerSide isEqualTo civilian)}";
+        conditions = "license_cop_driver || {!(playerSide isEqualTo west)}";
         price = -1;
         textures[] = { };
         storeLiquid = false;
