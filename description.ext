@@ -24,7 +24,7 @@ class Header
 onLoadName = "LifeNET RPG";
 onLoadMission 	= "Weiterentwickelt vom LifeNET Team";
 author = "LifeNET RPG - Team";
-loadScreen = "\LifeNET_Textures\istdasnocharma.jpg";
+loadScreen = "istdasnocharma.jpeg";
 
 enableTeamSwitch = 0;
 
